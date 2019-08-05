@@ -1,1 +1,1 @@
-require('vendors/_index');
+require('./vendors/_index');

@@ -1,1 +1,1 @@
-require('axios');
+require('./axios');
