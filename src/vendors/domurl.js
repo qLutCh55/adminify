@@ -1,0 +1,1 @@
+window.domurl = require('domurl');
