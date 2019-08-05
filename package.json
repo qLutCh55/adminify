@@ -1,6 +1,6 @@
 {
   "name": "adminify",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Admin package for Laravel",
   "license": "MIT",
   "repository": "qLutCh55/adminify",
@@ -9,5 +9,8 @@
     "adminify",
     "laravel",
     "vuetify"
-  ]
+  ],
+  "dependencies": {
+    "axios": "^0.19.0"
+  }
 }
