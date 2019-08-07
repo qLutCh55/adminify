@@ -1,6 +1,6 @@
 {
   "name": "adminify",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Admin package for Laravel",
   "license": "MIT",
   "repository": "qLutCh55/adminify",
@@ -9,5 +9,5 @@
     "adminify",
     "laravel",
     "vuetify"
-  ],
+  ]
 }
