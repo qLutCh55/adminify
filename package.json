@@ -10,10 +10,4 @@
     "laravel",
     "vuetify"
   ],
-  "dependencies": {
-    "axios": "^0.19.0",
-    "domurl": "^2.2.0",
-    "moment": "^2.24.0",
-    "vue": "^2.6.10"
-  }
 }
