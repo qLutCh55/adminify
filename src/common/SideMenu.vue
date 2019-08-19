@@ -58,13 +58,11 @@
     </v-navigation-drawer>
 </template>
 <script>
-    import menu from '../../../../resources/js/menu';
-
     export default {
         name: 'Menu',
         data() {
             return {
-                menu: menu
+                menu: ADMINIFY_MENU
             }
         },
         computed: {

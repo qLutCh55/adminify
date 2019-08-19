@@ -96,7 +96,7 @@ const store = (config = {}) => {
     storeModules = {
         auth: authModule,
         resources: resourceModule,
-        application:applicationModule
+        application: applicationModule
     };
 
     if (typeof config.modules !== 'undefined') {
