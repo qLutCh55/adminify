@@ -62,7 +62,7 @@
                 :total-items="totalItems"
                 :expand="true"
                 :loading="fetching"
-                :rowsPerPageItems="[15,20,25]">
+                :rowsPerPageItems="$store.getters['resources/getPerPage']">
             <template slot="items" slot-scope="props">
                 <slot name="row" v-bind:item="props.item"></slot>
             </template>
@@ -95,7 +95,7 @@
                 pagination: {
                     descending: false,
                     page: 1,
-                    rowsPerPage: 15,
+                    rowsPerPage: 25,
                     sortBy: null,
                     totalItems: 0,
                 },

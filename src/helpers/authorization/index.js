@@ -122,7 +122,6 @@ Vue.mixin({
                 }, 100);
             }
 
-
             return false;
         },
     }

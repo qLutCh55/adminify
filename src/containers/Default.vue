@@ -1,5 +1,5 @@
 <template>
-    <v-app light>
+    <v-app>
         <side-menu/>
 
         <title-updater></title-updater>

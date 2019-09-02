@@ -1,62 +1,92 @@
 <template>
     <v-navigation-drawer
-            temporary
-            :right="right"
-            v-model="notificationDrawer"
-            fixed
-            app
+        temporary
+        :right="right"
+        v-model="notificationDrawer"
+        fixed
+        app
     >
-        <v-toolbar flat prominent dark class="primary">
+        <v-toolbar
+            flat
+            dark
+            class="primary"
+        >
             <v-toolbar-title>Notifications</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn icon @click.stop="toggleNotificationDrawer">
+            <v-btn
+                icon
+                @click.stop="toggleNotificationDrawer"
+            >
                 <v-icon>mdi-close</v-icon>
             </v-btn>
         </v-toolbar>
 
-        <div class="text-xs-center pa-5" v-if="fetching">
+        <div
+            class="text-center pa-5"
+            v-if="fetching"
+        >
             <v-progress-circular
-                    :size="40"
-                    color="primary"
-                    indeterminate
+                :size="40"
+                color="primary"
+                indeterminate
             ></v-progress-circular>
         </div>
-        <v-list subheader dense v-else>
+        <v-list
+            subheader
+            dense
+            v-else
+        >
             <template v-if="!notifications.length">
-                <v-list-tile>
-                    <v-list-tile-content>
-                        <v-list-tile-title>No notifications</v-list-tile-title>
-                    </v-list-tile-content>
-                </v-list-tile>
+                <v-list-item>
+                    <v-list-item-content>
+                        <v-list-item-title>No notifications</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
             </template>
-            <template v-else>
-                <v-list-tile
-                        v-for="(notification, index) in notifications"
-                        :key="index"
-                        avatar
-                        :class="notification.read_at ? '' : 'primary lighten-2'"
-                        @click="viewNotification(index)"
-                >
-                    <v-list-tile-avatar>
-                        <v-icon v-if="notification.icon">{{ notification.icon }}</v-icon>
-                        <v-icon v-else>mdi mdi-bell-ring</v-icon>
-                    </v-list-tile-avatar>
-
-                    <v-list-tile-content>
-                        <v-list-tile-title>
-                            {{ notification.total }} {{ notification.type }} {{ notification.action }}
-                        </v-list-tile-title>
-                        <v-list-tile-sub-title v-if="notification.read_at">
-                            Read {{ notification.read_at|fromNow }}
-                        </v-list-tile-sub-title>
-                    </v-list-tile-content>
-
-                    <v-list-tile-action>
-                        <v-btn icon ripple @click="deleteNotification(index)">
-                            <v-icon color="error">mdi mdi-delete-circle-outline</v-icon>
+            <template
+                v-else
+            >
+                <v-list-item>
+                    <v-list-item-content class="align-center">
+                        <v-btn
+                            text
+                            color="error"
+                            small
+                            @click="clearAllNotifications">
+                            Clear all
                         </v-btn>
-                    </v-list-tile-action>
-                </v-list-tile>
+                    </v-list-item-content>
+                </v-list-item>
+
+                <v-card
+                    flat
+                    v-for="(notification, index) in notifications"
+                    :key="index"
+                    avatar
+                    class="notification-card"
+                    :class="notification.url ? 'pointer' : ''"
+                >
+                    <v-card-title class="pt-0">
+                        <div
+                            class="notification-card-avatar"
+                            @click="viewNotification(index)"
+                        >
+                            <v-avatar size="30" v-if="notification.thumbnail && imageExists(notification.thumbnail)">
+                                <img :src="notification.thumbnail">
+                            </v-avatar>
+                            <v-icon v-else>mdi-bell-ring</v-icon>
+                        </div>
+                        <div class="notification-card-content" @click="viewNotification(index)">
+                            <span class="body-2">{{ notification.message }}</span> <br>
+                            <span class="caption">{{ notification.created_at|fromNow }}</span>
+                        </div>
+                        <div class="notification-card-action">
+                            <v-btn icon @click="deleteNotification(index)" flat>
+                                <v-icon color="error">mdi-close</v-icon>
+                            </v-btn>
+                        </div>
+                    </v-card-title>
+                </v-card>
             </template>
         </v-list>
     </v-navigation-drawer>
@@ -107,10 +137,6 @@
                 if (typeof notification.url !== 'undefined' && notification.url) {
                     this.$router.push(notification.url);
                 }
-
-                window.axios.post('/notifications/read', {identifier: notification.identifier}).then(response => {
-                    this.$store.commit('application/setNotificationsCount', response.data.count);
-                });
             },
             deleteNotification(index) {
                 let notification = this.notifications[index];
@@ -118,6 +144,20 @@
                 window.axios.post('/notifications/remove', {identifier: notification.identifier}).then(response => {
                     this.$store.commit('application/setNotificationsCount', response.data.count);
                 });
+            },
+
+            clearAllNotifications() {
+                window.axios.post('/notifications/clearAll').then(response => {
+                    this.$store.commit('application/setNotificationsCount', 0);
+                    this.notifications = [];
+                });
+            },
+
+            imageExists(imageUrl) {
+                let http = new XMLHttpRequest();
+                http.open('HEAD', imageUrl, false);
+                http.send();
+                return http.status !== 404;
             }
         },
     }

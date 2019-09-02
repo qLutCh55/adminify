@@ -6,10 +6,17 @@
             fixed
             app
     >
-        <v-toolbar flat prominent dark class="primary">
+        <v-toolbar
+            flat
+            dark
+            class="primary"
+        >
             <v-toolbar-title>Filters</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn icon @click.stop="toggleFilterDrawer">
+            <v-btn
+                icon
+                @click.stop="toggleFilterDrawer"
+            >
                 <v-icon>mdi-close</v-icon>
             </v-btn>
         </v-toolbar>
@@ -21,24 +28,26 @@
                     v-for="(filter, index) in filters"
                     :key="component + index"
             >
-                <v-list-tile slot="activator">
-                    <v-list-tile-title>{{ getFilterTypeLabel(filter.type) }}</v-list-tile-title>
-                </v-list-tile>
+                <v-list-item slot="activator">
+                    <v-list-item-title>{{ getFilterTypeLabel(filter.type) }}</v-list-item-title>
+                </v-list-item>
 
                 <template v-for="item in filter.data">
-                    <v-list-tile>
-                        <v-list-tile-action>
+                    <v-list-item>
+                        <v-list-item-action>
                             <v-checkbox
                                     color="primary"
                                     @change="toggleFilter(filter.type, item.id)"
                                     :input-value="!! isFilterActive(filter.type, item.id)"
                                     value
                             ></v-checkbox>
-                        </v-list-tile-action>
-                        <v-list-tile-content>
-                            <v-list-tile-title>{{ item.name }}</v-list-tile-title>
-                        </v-list-tile-content>
-                    </v-list-tile>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title>
+                                {{ item.name }}
+                            </v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
                 </template>
 
             </v-list-group>

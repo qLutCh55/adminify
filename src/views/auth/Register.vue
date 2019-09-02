@@ -2,10 +2,15 @@
     <auth-container>
         <v-card width="320">
             <v-card-text>
-                <div class="text-xs-center display-3 grey--text text--darken-2 font-weight-light mb-4">
+                <div class="text-center display-3 grey--text text--darken-2 font-weight-light mb-4">
                     Register
                 </div>
-                <v-form @submit.native.prevent="doRegister" ref="registerForm" class="text-xs-center" lazy-validation>
+                <v-form
+                    @submit.native.prevent="doRegister"
+                    ref="registerForm"
+                    class="text-center"
+                    lazy-validation
+                >
                     <v-text-field
                             label="Name"
                             v-model="register.name"
@@ -58,9 +63,12 @@
                             :type="viewConfirmPassword ? 'text' : 'password'"
                             :disabled="attempting"
                     ></v-text-field>
-                    <div class="text-xs-center">
-                        <v-btn type="submit" color="primary" :disabled="attempting"
-                               :loading="attempting">
+                    <div class="text-center">
+                        <v-btn
+                            type="submit"
+                            color="primary"
+                            :loading="attempting"
+                        >
                             Register
                         </v-btn>
                     </div>
@@ -68,7 +76,13 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn flat @click="goToLoginPage" :disabled="attempting">Already have an account?</v-btn>
+                <v-btn
+                    text
+                    @click="goToLoginPage"
+                    :disabled="attempting"
+                >
+                    Already have an account?
+                </v-btn>
             </v-card-actions>
         </v-card>
     </auth-container>

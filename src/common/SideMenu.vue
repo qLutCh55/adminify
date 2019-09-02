@@ -8,53 +8,137 @@
         v-model="drawer"
         app
     >
-        <v-toolbar flat class="transparent">
-            <v-list class="pa-0" :class="{'list-border-bottom' : miniVariant}">
-                <v-list-tile>
-                    <v-list-tile-avatar v-if="!miniVariant">
-                        <v-icon color="orange">
-                            mdi-hubspot
-                        </v-icon>
-                    </v-list-tile-avatar>
-                    <v-list-tile-content v-if="!miniVariant">
-                        <v-list-tile-title>{{ applicationName }}<sup class="sub-caption">TM</sup></v-list-tile-title>
-                    </v-list-tile-content>
-                    <v-list-tile-action>
-                        <v-btn icon @click.stop="miniVariant = !miniVariant">
-                            <v-icon v-html="miniVariant ? 'mdi-chevron-right' : 'mdi-chevron-left'"></v-icon>
-                        </v-btn>
-                    </v-list-tile-action>
-                </v-list-tile>
-            </v-list>
-        </v-toolbar>
+        <v-list-item>
+            <v-list-item-avatar v-if="!miniVariant">
+                <v-icon color="orange">
+                    mdi-hubspot
+                </v-icon>
+            </v-list-item-avatar>
+            <v-list-item-content v-if="!miniVariant">
+                <v-list-item-title>
+                    {{ applicationName }}
+                    <sup class="sub-caption">TM</sup>
+                </v-list-item-title>
+            </v-list-item-content>
+            <v-list-item-action>
+                <v-btn
+                    icon
+                    @click.stop="miniVariant = !miniVariant"
+                >
+                    <v-icon v-html="miniVariant ? 'mdi-chevron-right' : 'mdi-chevron-left'"></v-icon>
+                </v-btn>
+            </v-list-item-action>
+        </v-list-item>
         <v-divider></v-divider>
 
+        <v-list
+            dense
+            subheader
+        >
+            <template
+                v-for="(menuItem, index) in menu"
+                v-if="menuItem.restriction == 'none' || hasPermission(menuItem.restriction)"
+            >
+                <v-tooltip
+                    :key="index"
+                    right
+                    :disabled="!miniVariant || openPanel == menuItem.heading"
+                >
+                    <template v-slot:activator="{ on }">
+                        <v-list-group
+                            :value="mustOpen(menuItem)"
+                            :key="index"
+                            :prepend-icon="miniVariant ? menuItem.icon : ''"
+                            @click="setActiveExpansionPanel(menuItem.heading)"
+                            v-on="on"
+                        >
+                            <v-icon v-if="miniVariant" slot="prependIcon">
+                                {{ menuItem.icon }}
+                            </v-icon>
 
-        <template v-for="(menuItem, index) in menu">
-            <v-list dense subheader :class="{'list-border-bottom' : miniVariant}" :key="index">
-                <v-subheader>{{ menuItem.heading.toUpperCase() }}</v-subheader>
-                <v-tooltip right :disabled="!miniVariant" v-for="(menuChild, childIndex) in menuItem.children"
-                           :key="childIndex">
-                    <v-list-tile
-                        :to="menuChild.path"
-                        exact
-                        slot="activator"
-                    >
-                        <v-list-tile-action>
-                            <v-icon>{{ menuChild.icon }}</v-icon>
-                        </v-list-tile-action>
-                        <v-list-tile-content>
-                            <v-list-tile-title>{{ menuChild.name }}</v-list-tile-title>
-                        </v-list-tile-content>
-                    </v-list-tile>
-                    <span
-                        v-if="miniVariant && typeof menuChild.miniName !== 'undefined'">{{ menuChild.miniName }}</span>
-                    <span v-else>{{ menuChild.name }}</span>
+                            <template v-slot:activator>
+                                <v-list-item>
+                                    <v-list-item-title>{{ menuItem.heading.toUpperCase() }}</v-list-item-title>
+                                </v-list-item>
+                            </template>
+
+                            <v-tooltip
+                                right
+                                :disabled="!miniVariant"
+                                v-for="(menuChild, childIndex) in menuItem.children"
+                                :key="childIndex"
+                                v-if="!menuChild.restriction || menuChild.restriction == 'none' || hasPermission(menuChild.restriction)"
+                            >
+                                <template v-slot:activator="{ on }">
+                                    <v-list-item
+                                        :to="menuChild.path"
+                                        exact
+                                        v-on="on"
+                                    >
+                                        <v-list-item-action>
+                                            <v-icon>{{ menuChild.icon }}</v-icon>
+                                        </v-list-item-action>
+                                        <v-list-item-content>
+                                            <v-list-item-title>{{ menuChild.name }}</v-list-item-title>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </template>
+                                <span v-if="miniVariant && typeof menuChild.miniName !== 'undefined'">
+                                    {{ menuChild.miniName }}
+                                </span>
+                                <span v-else>{{ menuChild.name }}</span>
+                            </v-tooltip>
+                        </v-list-group>
+                    </template>
+                    <span>{{ menuItem.heading }}</span>
                 </v-tooltip>
-            </v-list>
 
-            <v-divider></v-divider>
-        </template>
+                <v-divider></v-divider>
+            </template>
+
+        </v-list>
+
+        <!--        TODO: This is for non-collapseable menu -> maybe add prop? -->
+        <!--        <template v-for="(menuItem, index) in menu">-->
+        <!--            <v-list-->
+        <!--                dense-->
+        <!--                subheader-->
+        <!--                :key="index"-->
+        <!--            >-->
+        <!--                <v-subheader>{{ menuItem.heading.toUpperCase() }}</v-subheader>-->
+        <!--                <v-tooltip-->
+        <!--                    right-->
+        <!--                    :disabled="!miniVariant"-->
+        <!--                    v-for="(menuChild, childIndex) in menuItem.children"-->
+        <!--                    :key="childIndex"-->
+        <!--                >-->
+        <!--                    <template v-slot:activator="{ on }">-->
+        <!--                        <v-list-item-->
+        <!--                            :to="menuChild.path"-->
+        <!--                            exact-->
+        <!--                            v-on="on"-->
+        <!--                        >-->
+        <!--                            <v-list-item-action>-->
+        <!--                                <v-icon>{{ menuChild.icon }}</v-icon>-->
+        <!--                            </v-list-item-action>-->
+        <!--                            <v-list-item-content>-->
+        <!--                                <v-list-item-title>{{ menuChild.name }}</v-list-item-title>-->
+        <!--                            </v-list-item-content>-->
+        <!--                        </v-list-item>-->
+        <!--                    </template>-->
+        <!--                    <span-->
+        <!--                        v-if="miniVariant && typeof menuChild.miniName !== 'undefined'"-->
+        <!--                    >-->
+        <!--                        {{ menuChild.miniName }}-->
+        <!--                    </span>-->
+        <!--                    <span v-else>-->
+        <!--                        {{ menuChild.name }}-->
+        <!--                    </span>-->
+        <!--                </v-tooltip>-->
+        <!--            </v-list>-->
+
+        <!--            <v-divider></v-divider>-->
+        <!--        </template>-->
     </v-navigation-drawer>
 </template>
 <script>
@@ -62,7 +146,9 @@
         name: 'Menu',
         data() {
             return {
-                menu: ADMINIFY_MENU
+                menu: ADMINIFY_MENU,
+
+                openPanel: null,
             }
         },
         computed: {
@@ -84,6 +170,50 @@
             },
             applicationName() {
                 return this.$store.getters['application/getApplicationName'];
+            }
+        },
+        methods: {
+            hasPermission(permissionString) {
+                if (typeof permissionString == 'undefined') {
+                    return true;
+                }
+
+                let roles = permissionString.split('|');
+
+                for (let i = 0, len = roles.length; i < len; i++) {
+                    let role = roles[i];
+
+                    if (this.hasRole(role)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            },
+
+            setActiveExpansionPanel(name) {
+                if (this.openPanel == name) {
+                    this.openPanel = null;
+                } else {
+                    this.openPanel = name;
+                }
+            },
+
+            mustOpen(item) {
+                for (let i = 0, len = item.children.length; i < len; i++) {
+                    let child = item.children[i];
+
+                    let childUrl = child.path;
+
+                    if (childUrl.indexOf('?') !== -1) {
+                        childUrl = child.path.substring(0, child.path.indexOf("?"));
+                    }
+
+                    if (window.location.href.indexOf(childUrl) > -1) {
+                        return true;
+                    }
+                }
+                return false;
             }
         }
     }

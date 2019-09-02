@@ -1,5 +1,5 @@
 <template>
-    <v-card flat>
+    <v-card flat class="mb-1">
         <div v-if="uploading" class="text-xs-center">
             <template v-if="!multiple">
                 <v-progress-circular
@@ -38,7 +38,7 @@
         </div>
         <div v-else>
             <div
-                    class="dropbox"
+                    class="dropbox mt-3"
                     @click="selectFile"
                     @dragover.prevent="updateDragDropFocus(true)"
                     @dragleave.prevent="updateDragDropFocus(false)"
@@ -56,7 +56,7 @@
                         :multiple="multiple"
                 />
                 <p>
-                    <slot></slot>
+                    Drag your {{ fileType }}<br> or click to browse
                 </p>
             </div>
         </div>

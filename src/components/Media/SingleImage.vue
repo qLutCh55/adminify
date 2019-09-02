@@ -1,93 +1,122 @@
 <template>
-    <v-card flat class="mb-1">
-        <div v-if="uploading" class="text-xs-center">
-            <v-progress-circular
+    <div class="single-image-wrapper" :style="aspectRatio == 1 ? 'max-width: 320px;' : ''">
+        <v-card flat>
+            <v-card-title v-if="title">
+                <h3 class="headline mb-0">{{ title }}</h3>
+            </v-card-title>
+
+            <v-card-text v-if="uploading">
+                <v-progress-circular
                     :rotate="270"
                     :size="150"
                     :width="10"
                     :value="uploadingProgress"
                     color="primary"
-            >
-                {{ uploadingProgress }} %
-            </v-progress-circular>
-        </div>
-        <div v-else>
-            <div
-                    class="dropbox mt-3"
-                    @click="selectFile"
-                    @dragover.prevent="updateDragDropFocus(true)"
-                    @dragleave.prevent="updateDragDropFocus(false)"
-                    @dragenter.prevent="updateDragDropFocus(true)"
-                    @drop.prevent="detectFiles"
-                    v-show="typeof object.hash === 'undefined'"
-            >
-                <input
-                        v-if="uploadReady"
-                        class="hidden"
-                        ref="nodeFile"
-                        type="file"
-                        name="file"
-                        accept="image/jpeg, image/png"
-                        @change="detectFiles"
-                        :disabled="disabled"
-                />
-                <p>
-                    Drag your image<br> or click to browse
-                </p>
-            </div>
-            <div v-if="typeof object.hash !== 'undefined'" class="text-xs-center">
-                <img class="img-fluid" :src="imageUrl">
-            </div>
-        </div>
-        <v-confirm
-                :dialog.sync="deleteDialog"
-                :waiting.sync="deleteWaiting"
-                @cancel="cancelDelete"
-                @confirm="doDeleteImage"
-        ></v-confirm>
-        <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-                    flat
-                    color="error"
-                    v-if="typeof object.hash !== 'undefined'"
-                    @click="handleDeleteImage"
-                    :disabled="disabled"
-            >
-                Remove
-            </v-btn>
-            <v-btn
-                    flat
+                >
+                    {{ uploadingProgress }} %
+                </v-progress-circular>
+            </v-card-text>
+            <v-img
+                v-else-if="originalImage"
+                :src="originalImage"
+                :aspect-ratio="aspectRatio"
+                @click="changeImage"
+            ></v-img>
+            <v-card-text v-else>
+                <v-btn
+                    @click="changeImage"
                     color="primary"
-                    v-if="typeof object.hash !== 'undefined'"
-                    @click="selectFile"
                     :disabled="disabled"
-            >
-                Change
-            </v-btn>
-        </v-card-actions>
-    </v-card>
+                >
+                    Click to upload
+                </v-btn>
+            </v-card-text>
+            <v-card-actions v-if="originalImage">
+                <v-spacer></v-spacer>
+                <v-btn
+                    @click="changeImage"
+                    flat
+                    :disabled="disabled"
+                    color="success"
+                >
+                    Replace
+                </v-btn>
+                <v-btn
+                    v-if="imageFlag !== 'cantDelete'"
+                    @click="deleteDialog = true"
+                    flat
+                    :disabled="disabled"
+                    color="error"
+                >
+                    Remove
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+        <input
+            v-if="changeable"
+            hidden
+            type="file"
+            ref="imageInput"
+            class="hidden"
+            :accept="accept"
+            :disabled="disabled"
+            @change="onFileChange"
+        >
+        <v-img-editor
+            v-if="showEditor && changeable"
+            :image="newImage"
+            :ratios="[cropRatio]"
+            :viewMode="1"
+            @close="resetEditor"
+            @save="upload"
+        ></v-img-editor>
+        <v-delete
+            v-if="changeable"
+            :dialog.sync="deleteDialog"
+            :waiting.sync="deleteWaiting"
+            @cancel="deleteDialog = false"
+            @confirm="doDelete"
+        ></v-delete>
+    </div>
 </template>
 <script>
     export default {
         data() {
             return {
-                uploadReady: true,
-                dragDropFocus: false,
-
-                object: {},
-
-                imageDetails: {},
-
+                originalImage: null,
+                fileDetails: {},
+                showEditor: false,
+                newImage: {
+                    blob: null,
+                    url: null,
+                    name: null,
+                    type: null,
+                },
+                uploading: false,
+                uploadingProgress: 0,
                 deleteDialog: false,
                 deleteWaiting: false,
 
-                uploading: false,
-                uploadingProgress: null
+                imageFlag: '',
             }
         },
-        name: 'Single-Item',
+        name: 'Single-Image',
         props: {
+            'title': {
+                default: ''
+            },
+            'image': {
+                type: String,
+                required: true
+            },
+            'flag': {
+                type: String,
+                default: ''
+            },
+            'accept': {
+                type: String,
+                default: '*',
+            },
             'model-id': {
                 type: Number,
                 required: true,
@@ -98,156 +127,164 @@
             },
             'role': {
                 type: String,
-                default: 'images'
+                required: true
             },
             'details': {
                 type: Object,
             },
             'width': {
                 type: String,
-                default: null
+                default: '200',
             },
             'height': {
                 type: String,
-                default: null
+                default: '200',
             },
-            'actions': {
+            'changeable': {
                 type: Boolean,
-                default: true
+                default: true,
             },
             'disabled': {
                 type: Boolean,
-                default: false
+                default: false,
             },
-            'image': {
-                type: Object,
-                required: true,
+            'viewMode': {
+                type: Number,
+                default: 0
+            },
+            'cropRatio': {
+                default: '1:1',
+            },
+            'aspect-ratio': {
+                default: '2.75',
             }
         },
         computed: {
-            imageUrl() {
-                if (this.width && this.height) {
-                    return '/images/' + this.object.hash + '-ft=' + this.width + '+' + this.height + '.' + this.object.type;
-                } else if (this.width) {
-                    return '/images/' + this.object.hash + '-ft=' + this.width + '+' + (this.object.width / this.object.height) * this.width + '.' + this.object.type;
-                } else if (this.height) {
-                    return '/images/' + this.object.hash + '-ft=' + (this.object.height / this.object.width) * this.height + '+' + this.height + '.' + this.object.type;
-                } else {
-                    if (this.object.orientation == 'L') {
-                        return '/images/' + this.object.hash + '-ct=' + 800 + '+' + 400 + '.' + this.object.type;
-                    } else {
-                        return '/images/' + this.object.hash + '-ct=' + 400 + '+' + 600 + '.' + this.object.type;
-                    }
-                }
+            deleteable() {
+                return this.imageFlag === 'canDelete';
             }
         },
+        watch: {},
         mounted() {
-            this.object = this.image;
+            this.originalImage = this.image;
             if (this.details) {
-                this.imageDetails = this.details;
+                this.fileDetails = this.details;
             }
+            this.imageFlag = this.flag;
         },
         methods: {
-            selectFile() {
+            changeImage() {
                 if (this.disabled) {
                     return false;
                 }
-                this.$refs.nodeFile.click();
+
+                if (this.changeable) {
+                    this.$refs.imageInput.click();
+                }
             },
-            detectFiles(e) {
-                e.preventDefault();
+            onFileChange(e) {
                 let fileList = e.target.files || e.dataTransfer.files;
-                for (let i = 0, len = fileList.length; i < len; i++) {
-                    this.uploadImage(fileList[i]);
-                }
-                this.clearFileInput();
+                this.showImageEditor(fileList[0]);
             },
-            clearFileInput() {
-                this.uploadReady = false;
-                this.$nextTick(() => {
-                    this.uploadReady = true;
-                })
-            },
-            uploadImage(image) {
+            showImageEditor(image) {
                 if (typeof image !== 'undefined' && this.verifyFileType(image)) {
-
-                    this.uploading = true;
-
-                    let data = new FormData();
-                    data.append('modelId', this.modelId);
-                    data.append('model', this.model);
-                    data.append('role', this.role);
-                    Object.keys(this.imageDetails).forEach(key => data.append(key, this.imageDetails[key]));
-                    data.append(this.role, image, image.name);
-
-                    window.axios.post('/images/upload', data, {
-                        errorHandle: true,
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        },
-                        onUploadProgress: (progressEvent) => {
-                            this.uploadingProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-                        }
-                    }).then(response => {
-                        this.object = response.data.image;
-                        this.$emit('newImage', this.object);
-                        this.uploading = false;
-                        this.uploadingProgress = 0;
-
-                        this.$toasted.show("Image uploaded", {
-                            theme: "default",
-                            position: "top-center",
-                            duration: 1500
-                        });
-                    }).catch(error => {
-                        let message = "Whoops! Something went wrong";
-
-                        if (error.response.status === 413) {
-                            message = "Whoops! Image size is too large";
-                        }
-
-                        this.$toasted.show(message, {
-                            theme: "error",
-                            position: "top-center",
-                            duration: 3500
-                        });
-                    });
+                    this.newImage = {
+                        blob: image,
+                        url: URL.createObjectURL(image),
+                        name: image.name,
+                        type: image.type,
+                    };
+                    this.showEditor = true;
                 }
             },
-            verifyFileType(image) {
-                let allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-                if (allowedTypes.indexOf(image.type) < 0) {
-                    this.$toasted.show("Whoops! Seems like image " + image.name + " is the wrong image type!", {
+            upload(image) {
+                this.uploading = true;
+
+                let data = new FormData();
+                data.append('modelId', this.modelId);
+                data.append('model', this.model);
+                data.append('single', true);
+                data.append('role', this.role);
+                Object.keys(this.fileDetails).forEach(key => data.append(key, this.fileDetails[key]));
+                data.append(this.role, image, image.name);
+
+                window.axios.post('/images/upload', data, {
+                    errorHandle: true,
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    onUploadProgress: (progressEvent) => {
+                        this.uploadingProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                    }
+                }).then(response => {
+                    this.$emit('update');
+                    this.originalImage = '/images/' + response.data.image.hash + '-ft=' + this.width + '+' + this.height + '.' + response.data.image.type;
+                    this.imageFlag = '';
+                    this.uploading = false;
+                    this.uploadingProgress = 0;
+                    this.$toasted.show("Image uploaded", {
+                        theme: "default",
+                        position: "top-center",
+                        duration: 1500
+                    });
+                }).catch(error => {
+                    let message = "Whoops! Something went wrong";
+
+                    if (error.response.status === 413) {
+                        message = "Whoops! Image size is too large";
+                    }
+
+                    this.$toasted.show(message, {
                         theme: "error",
                         position: "top-center",
-                        duration: 5000
+                        duration: 3500
                     });
-                    return false;
+                });
+            },
+            verifyFileType(file) {
+                if (this.accept && this.accept !== '*') {
+                    let allowedTypes = this.accept.split(',').map(function (item) {
+                        return item.trim();
+                    });
+
+                    if (allowedTypes.indexOf(file.type) < 0) {
+                        this.$toasted.show("Whoops! Seems like thumbnail " + file.name + " is the wrong file type!", {
+                            theme: "error",
+                            position: "top-center",
+                            duration: 5000
+                        });
+                        return false;
+                    }
                 }
                 return true;
             },
-            updateDragDropFocus(focus) {
-                this.dragDropFocus = focus;
+            resetEditor() {
+                this.newImage = {
+                    blob: null,
+                    url: null,
+                    name: null,
+                    type: null,
+                };
+                this.showEditor = false;
             },
-            cancelDelete() {
-                this.deleteWaiting = false;
-                this.deleteDialog = false;
-            },
-            handleDeleteImage() {
-                this.deleteDialog = true;
-            },
-            doDeleteImage() {
+            doDelete() {
                 this.deleteWaiting = true;
                 window.axios.post('/images/clear', {
                     modelId: this.modelId,
                     model: this.model,
-                    id: this.object.id,
                     role: this.role
                 }).then(response => {
-                    this.object = {};
-                    this.cancelDelete();
-                    this.$emit('remove');
-                    this.$toasted.show("Image deleted", {
+                    this.$emit('update');
+                    if (typeof response.data.thumbnail !== 'undefined') {
+                        this.originalImage = response.data.thumbnail;
+                        this.imageFlag = 'cantDelete';
+                    } else {
+                        this.originalImage = null;
+                        this.imageFlag = '';
+                    }
+                    this.deleteWaiting = false;
+                    this.deleteDialog = false;
+                    this.$toasted.show("Image removed", {
                         theme: "default",
                         position: "top-center",
                         duration: 1500

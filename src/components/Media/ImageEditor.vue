@@ -103,7 +103,7 @@
             },
             ratios: {
                 type: Array,
-                default: () => ['Free', '16:9', '4:3', '1:1', '2:3']
+                default: () => ['Free', '16:9', '4:3', '1:1', '2:3', '2:1']
             },
             'viewMode': {
                 type: Number,
@@ -205,6 +205,8 @@
                     this.ratio = 1 / 1
                 } else if (this.cropRatio == '2:3') {
                     this.ratio = 2 / 3
+                } else if (this.cropRatio == '2:1') {
+                    this.ratio = 2 / 1
                 }
             },
             changeAspectRatio() {

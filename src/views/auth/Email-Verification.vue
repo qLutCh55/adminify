@@ -2,20 +2,26 @@
     <auth-container>
         <v-card width="450">
             <v-card-text>
-                <div class="text-xs-center display-3 grey--text text--darken-2 font-weight-light mb-4">
+                <div class="text-center display-3 grey--text text--darken-2 font-weight-light mb-4">
                     Email Verification
                 </div>
-                <div class="text-xs-center">
+                <div class="text-center">
                     <p>Before proceeding, please check your email for a verification link.</p>
                     <p>If you did not receive the email, click below to request another</p>
                     <v-btn
-                            color="primary"
-                            :disabled="attempting"
-                            :loading="attempting"
-                            @click="resendVerificationEmail"
-                    >Resend verification email</v-btn>
+                        color="primary"
+                        :loading="attempting"
+                        @click="resendVerificationEmail"
+                    >
+                        Resend verification email
+                    </v-btn>
                 </div>
-                <v-alert :value="message !== ''" color="success">{{ message }}</v-alert>
+                <v-alert
+                    :value="message !== ''"
+                    color="success"
+                >
+                    {{ message }}
+                </v-alert>
             </v-card-text>
         </v-card>
     </auth-container>

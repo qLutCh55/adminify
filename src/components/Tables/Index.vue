@@ -1,12 +1,21 @@
 <template>
-    <v-container fluid grid-list-lg>
-        <v-layout row wrap>
+    <v-container
+        fluid
+        grid-list-lg
+    >
+        <v-layout wrap>
             <v-flex xs12>
                 <v-slide-y-transition mode="out-in">
                     <v-card>
-                        <v-card-title dark class="primary white--text">
-
-                            <v-btn color="white" @click.native="triggerCreateEvent" v-if="createButton">
+                        <v-card-title
+                            dark
+                            class="primary white--text pa-4"
+                        >
+                            <v-btn
+                                color="white"
+                                @click.native="triggerCreateEvent"
+                                v-if="createButton"
+                            >
                                 <span v-if="createButtonText">
                                     {{ createButtonText }}
                                 </span>
@@ -16,7 +25,7 @@
                             </v-btn>
 
 
-                            <div class="text--white text-uppercase subheading font-weight-medium pa-2">
+                            <div class="text--white text-uppercase subtitle-1 font-weight-medium px-3">
                                 {{ totalItems }}
                                 <span v-if="totalItems === 1">Result</span>
                                 <span v-else>Results</span>
@@ -37,26 +46,53 @@
                                 ></v-text-field>
                             </div>
 
-                            <v-btn icon dark @click.native.stop="searchBegin" v-if="searchButton">
+                            <v-btn
+                                icon
+                                dark
+                                @click.native.stop="searchBegin"
+                                v-if="searchButton"
+                            >
                                 <v-icon>mdi-magnify</v-icon>
                             </v-btn>
 
-                            <v-btn icon dark @click.native.stop="clearFilters" v-if="filterButton && filterCount > 0">
+                            <v-btn
+                                icon
+                                dark
+                                @click.native.stop="clearFilters"
+                                v-if="filterButton && filterCount > 0"
+                            >
                                 <v-icon>mdi-filter-remove-outline</v-icon>
                             </v-btn>
 
-                            <v-btn icon dark @click.native.stop="toggleFilterDrawer" v-if="filterButton">
+                            <v-btn
+                                icon
+                                dark
+                                @click.native.stop="toggleFilterDrawer"
+                                v-if="filterButton"
+                            >
                                 <v-badge
                                     color="error"
                                     left
                                     overlap
                                 >
-                                    <span slot="badge" v-if="filterCount !== 0">{{ filterCount }}</span>
+                                    <span
+                                        slot="badge"
+                                        v-if="filterCount !== 0"
+                                    >
+                                        {{ filterCount }}
+                                    </span>
                                     <v-icon>mdi-filter-variant</v-icon>
                                 </v-badge>
                             </v-btn>
 
-                            <v-btn icon dark @click.native.stop="fetchData" v-if="refreshButton">
+                            <slot name="additional-buttons"></slot>
+
+                            <v-btn
+                                icon
+                                dark
+                                @click.native.stop="fetchData"
+                                v-if="refreshButton"
+                            >
                                 <v-icon>mdi-autorenew</v-icon>
                             </v-btn>
 
@@ -65,12 +101,20 @@
                             class="elevation-1"
                             :headers="headers"
                             :items="items"
-                            :pagination.sync="pagination"
-                            :total-items="totalItems"
+                            :options.sync="options"
+                            :server-items-length="totalItems"
                             :loading="fetching"
-                            :rowsPerPageItems="[15,20,25]">
-                            <template slot="items" slot-scope="props">
-                                <slot name="row" v-bind:item="props.item"></slot>
+                            :footer-props="{
+                                'items-per-page-options': $store.getters['application/getPerPage']
+                            }"
+                            multi-sort
+                        >
+                            <template v-slot:body="{ items }">
+                                <tbody>
+                                <template v-for="(item, index) in items">
+                                    <slot name="row" v-bind:item="item"></slot>
+                                </template>
+                                </tbody>
                             </template>
                         </v-data-table>
                     </v-card>
@@ -89,12 +133,16 @@
                 items: [],
                 fetching: true,
                 timeout: null,
-                pagination: {
-                    descending: false,
+
+                options: {
+                    groupBy: [],
+                    groupDesc: [],
+                    itemsPerPage: 25,
+                    multiSort: false,
+                    mustSort: false,
                     page: 1,
-                    rowsPerPage: 15,
-                    sortBy: null,
-                    totalItems: 0,
+                    sortBy: [],
+                    sortDesc: [],
                 },
 
                 deleteDialog: false,
@@ -183,7 +231,7 @@
                     this.fetchData();
                 }
             },
-            'pagination'() {
+            'options'() {
                 if (!this.fetching) {
                     this.fetchData();
                 }
@@ -203,13 +251,11 @@
             fetchData() {
                 this.fetching = true;
 
-                const {sortBy, descending, page, rowsPerPage} = this.pagination;
+                this.setPageParameter(this.options.page);
 
-                this.setPageParameter(page);
+                this.setSortByParameter(this.options.sortBy, this.options.sortDesc);
 
-                this.setSortByParameter(sortBy, descending);
-
-                this.setRowsPerPageParameter(rowsPerPage);
+                this.setItemsPerPageParameter(this.options.itemsPerPage);
 
                 let url = '/' + this.pluralItemName + '/searchPaginated';
 
@@ -217,11 +263,11 @@
                     url = this.dataUrl;
                 }
 
-                window.axios.post(url + '?page=' + page, {
+                window.axios.post(url + '?page=' + this.options.page, {
                     filter: this.filter,
-                    itemsPerPage: rowsPerPage,
-                    sortBy: sortBy,
-                    descending: descending,
+                    itemsPerPage: this.options.itemsPerPage,
+                    sortBy: this.options.sortBy,
+                    sortDesc: this.options.sortDesc,
                 }).then(response => {
                     this.items = response.data[this.pluralItemName].data;
                     this.totalItems = response.data[this.pluralItemName].total;
@@ -233,7 +279,7 @@
                 let url = new window.domurl;
 
                 if (typeof url.query.page !== 'undefined') {
-                    this.pagination.page = parseInt(url.query.page);
+                    this.options.page = parseInt(url.query.page);
                 }
 
                 if (typeof url.query.q !== 'undefined') {
@@ -242,15 +288,15 @@
                 }
 
                 if (typeof url.query.sortBy !== 'undefined') {
-                    this.pagination.sortBy = url.query.sortBy;
+                    this.options.sortBy = url.query.sortBy.split('|');
                 }
 
                 if (typeof url.query.descending !== 'undefined') {
-                    this.pagination.descending = url.query.descending;
+                    this.options.sortDesc = url.query.descending.split('|');
                 }
 
                 if (typeof url.query.rows !== 'undefined') {
-                    this.pagination.rowsPerPage = Number(url.query.rows);
+                    this.options.itemsPerPage = Number(url.query.rows);
                 }
 
                 let definitions = url.decode(url.query.toString()).split('&');
@@ -266,17 +312,21 @@
             },
             setSortByParameter(sortBy, descending) {
                 let url = new window.domurl;
-                url.query.sortBy = sortBy;
-                if (sortBy) {
-                    url.query.descending = descending;
+
+                if (sortBy.length) {
+                    url.query.sortBy = sortBy.join('|');
+                    url.query.descending = descending.join('|');
                 } else {
+                    delete url.query.sortBy;
                     delete url.query.descending;
                 }
+
                 history.replaceState({path: url.decode(url.toString())}, '', url.decode(url.toString()));
+
             },
-            setRowsPerPageParameter(rowsPerPage) {
+            setItemsPerPageParameter(itemsPerPage) {
                 let url = new window.domurl;
-                url.query.rows = rowsPerPage;
+                url.query.rows = itemsPerPage;
                 history.replaceState({path: url.decode(url.toString())}, '', url.decode(url.toString()));
             },
             setQueryParameter(query) {

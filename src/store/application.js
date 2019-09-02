@@ -16,6 +16,8 @@ export default {
 
         notifications: 0,
         notificationDrawer: false,
+
+        paginationRowsPerPage: [25, 50, 100],
     },
 
     getters: {
@@ -62,6 +64,10 @@ export default {
 
         getNotificationsCount(state) {
             return state.notifications;
+        },
+
+        getPerPage(state) {
+            return state.paginationRowsPerPage;
         }
     },
 

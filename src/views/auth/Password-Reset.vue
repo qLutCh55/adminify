@@ -2,11 +2,15 @@
     <auth-container>
         <v-card width="320">
             <v-card-text>
-                <div class="text-xs-center display-3 grey--text text--darken-2 font-weight-light mb-4">
+                <div class="text-center display-3 grey--text text--darken-2 font-weight-light mb-4">
                     Reset Password
                 </div>
-                <v-form @submit.native.prevent="doPasswordReset" ref="resetPasswordForm" class="text-xs-center"
-                        lazy-validation>
+                <v-form
+                    @submit.native.prevent="doPasswordReset"
+                    ref="resetPasswordForm"
+                    class="text-center"
+                    lazy-validation
+                >
                     <v-text-field
                             label="Email"
                             v-model="user.email"
@@ -22,15 +26,23 @@
                             :autocomplete="'new-password'"
                             :disabled="attempting"
                     ></v-text-field>
-                    <div class="text-xs-center mt-2 mb-2">
-                        <v-btn type="submit" color="primary" :disabled="attempting"
-                               :loading="attempting">
+                    <div class="text-center mt-2 mb-2">
+                        <v-btn
+                            type="submit"
+                            color="primary"
+                            :loading="attempting"
+                        >
                             Send Password Reset Link
                         </v-btn>
                     </div>
                 </v-form>
 
-                <v-alert :value="message !== ''" color="success">{{ message }}</v-alert>
+                <v-alert
+                    :value="message !== ''"
+                    color="success"
+                >
+                    {{ message }}
+                </v-alert>
             </v-card-text>
         </v-card>
     </auth-container>

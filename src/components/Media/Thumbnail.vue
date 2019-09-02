@@ -2,19 +2,19 @@
     <div class="text-xs-center mb-3 v-thumbnail">
         <div class="v-thumbnail-avatar">
             <img
-                    :src="thumbnailImage"
-                    @click="changeThumbnail"
-                    class="img-fluid"
-                    :class="changeable? 'pointer' : ''"
-                    v-if="!uploading"
+                :src="thumbnailImage"
+                @click="changeThumbnail"
+                class="img-fluid"
+                :class="changeable? 'pointer' : ''"
+                v-if="!uploading"
             >
             <v-progress-circular
-                    v-else
-                    :rotate="270"
-                    :size="150"
-                    :width="10"
-                    :value="uploadingProgress"
-                    color="primary"
+                v-else
+                :rotate="270"
+                :size="150"
+                :width="10"
+                :value="uploadingProgress"
+                color="primary"
             >
                 {{ uploadingProgress }} %
             </v-progress-circular>
@@ -22,12 +22,12 @@
         <div class="v-thumbnail-actions" v-if="changeable">
             <v-tooltip bottom>
                 <v-btn
-                        slot="activator"
-                        fab
-                        small
-                        color="primary"
-                        @click="changeThumbnail"
-                        :disabled="disabled"
+                    slot="activator"
+                    fab
+                    small
+                    color="primary"
+                    @click="changeThumbnail"
+                    :disabled="disabled"
                 >
                     <v-icon>mdi-pencil</v-icon>
                 </v-btn>
@@ -36,13 +36,13 @@
 
             <v-tooltip bottom>
                 <v-btn
-                        slot="activator"
-                        fab
-                        small
-                        color="error"
-                        @click="deleteDialog = true"
-                        v-if="deleteable"
-                        :disabled="disabled"
+                    slot="activator"
+                    fab
+                    small
+                    color="error"
+                    @click="deleteDialog = true"
+                    v-if="deleteable"
+                    :disabled="disabled"
                 >
                     <v-icon>mdi-delete</v-icon>
                 </v-btn>
@@ -50,30 +50,30 @@
             </v-tooltip>
         </div>
         <input
-                v-if="changeable"
-                hidden
-                type="file"
-                ref="imageInput"
-                class="hidden"
-                :accept="accept"
-                :disabled="disabled"
-                @change="onFileChange"
+            v-if="changeable"
+            hidden
+            type="file"
+            ref="imageInput"
+            class="hidden"
+            :accept="accept"
+            :disabled="disabled"
+            @change="onFileChange"
         >
         <v-img-editor
-                v-if="showEditor && changeable"
-                :image="image"
-                :ratios="['1:1']"
-                :viewMode="1"
-                @close="resetEditor"
-                @save="upload"
+            v-if="showEditor && changeable"
+            :image="image"
+            :ratios="['1:1']"
+            :viewMode="1"
+            @close="resetEditor"
+            @save="upload"
         ></v-img-editor>
-        <v-confirm
-                v-if="changeable"
-                :dialog.sync="deleteDialog"
-                :waiting.sync="deleteWaiting"
-                @cancel="deleteDialog = false"
-                @confirm="doDelete"
-        ></v-confirm>
+        <v-delete
+            v-if="changeable"
+            :dialog.sync="deleteDialog"
+            :waiting.sync="deleteWaiting"
+            @cancel="deleteDialog = false"
+            @confirm="doDelete"
+        ></v-delete>
     </div>
 </template>
 <script>
@@ -149,7 +149,7 @@
         },
         computed: {
             deleteable() {
-                return this.imageFlag === 'canDelete';
+                return this.imageFlag !== 'cantDelete';
             }
         },
         watch: {},

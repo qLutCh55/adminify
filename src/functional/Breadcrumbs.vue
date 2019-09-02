@@ -1,10 +1,24 @@
 <template>
-    <v-container fluid grid-list-lg class="pb-0">
-        <v-layout row wrap>
+    <v-container
+        fluid
+        grid-list-lg
+        class="pa-0"
+    >
+        <v-layout>
             <v-flex xs12>
-                <h3 class="display-1 mb-3">{{ pageTitle }}</h3>
-                <v-breadcrumbs divider="/" :items="breadcrumbs" class="pa-0" v-if="!dashboard">
-                    <template slot="item" slot-scope="props">
+<!--                <h3 class="display-1 mb-3">-->
+<!--                    {{ pageTitle }}-->
+<!--                </h3>-->
+                <v-breadcrumbs
+                    divider="/"
+                    :items="breadcrumbs"
+                    v-if="!dashboard"
+                    class="pb-0"
+                >
+                    <template
+                        slot="item"
+                        slot-scope="props"
+                    >
                         <li>
                             <router-link
                                     :to="props.item.link"

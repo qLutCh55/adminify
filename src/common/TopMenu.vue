@@ -1,20 +1,27 @@
 <template>
-    <v-toolbar
-            app
-            flat
+    <v-app-bar
             color="primary"
             dark
+            flat
+            app
     >
-        <v-toolbar-side-icon
-                @click.stop="toggleLeftDrawer"
-                class="hidden-lg-and-up"
-        />
+        <v-app-bar-nav-icon
+            @click.stop="toggleLeftDrawer"
+            class="hidden-lg-and-up"
+        ></v-app-bar-nav-icon>
 
         <v-spacer></v-spacer>
 
-        <v-tooltip bottom v-if="canImpersonateReturn">
+        <v-tooltip
+            bottom
+            v-if="canImpersonateReturn"
+        >
             <template v-slot:activator="{ on }">
-                <v-btn icon v-on="on" @click.stop="impersonateReturn">
+                <v-btn
+                    icon
+                    v-on="on"
+                    @click.stop="impersonateReturn"
+                >
                     <v-icon>mdi-account-arrow-left</v-icon>
                 </v-btn>
             </template>
@@ -30,7 +37,10 @@
         </v-tooltip>
 
 
-        <v-btn icon @click.stop="toggleNotificationDrawer">
+        <v-btn
+            icon
+            @click.stop="toggleNotificationDrawer"
+        >
             <v-badge
                     color="error"
                     overlap
@@ -46,46 +56,54 @@
 
 
         <v-menu
-                bottom
-                left
+            bottom
+            left
         >
-            <v-btn icon slot="activator">
-                <v-avatar size="32">
-                    <img :src="loggedInUser.thumbnail">
-                </v-avatar>
-            </v-btn>
-            <v-list class="pa-0">
-                <v-list-tile avatar>
-                    <v-list-tile-avatar>
+            <template v-slot:activator="{ on }">
+                <v-btn
+                    icon
+                    slot="activator"
+                    v-on="on"
+                >
+                    <v-avatar size="32">
                         <img :src="loggedInUser.thumbnail">
-                    </v-list-tile-avatar>
-                    <v-list-tile-content>
-                        <v-list-tile-title>{{ loggedInUser.first_name }}</v-list-tile-title>
-                    </v-list-tile-content>
-                </v-list-tile>
+                    </v-avatar>
+                </v-btn>
+            </template>
+            <v-list class="pa-0">
+                <v-list-item>
+                    <v-list-item-avatar>
+                        <img :src="loggedInUser.thumbnail">
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                        <v-list-item-title>
+                            {{ loggedInUser.first_name }}
+                        </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
                 <v-divider></v-divider>
 
-                <v-list-tile key="profile" @click="editProfile">
-                    <v-list-tile-action>
+                <v-list-item key="profile" @click="editProfile">
+                    <v-list-item-action>
                         <v-icon>mdi-account</v-icon>
-                    </v-list-tile-action>
-                    <v-list-tile-content>
-                        <v-list-tile-title>My Profile</v-list-tile-title>
-                    </v-list-tile-content>
-                </v-list-tile>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                        <v-list-item-title>My Profile</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
                 <v-divider></v-divider>
 
-                <v-list-tile key="lock_open" @click="doLogout">
-                    <v-list-tile-action>
+                <v-list-item @click="doLogout">
+                    <v-list-item-action>
                         <v-icon>mdi-lock-open</v-icon>
-                    </v-list-tile-action>
-                    <v-list-tile-content>
-                        <v-list-tile-title>Logout</v-list-tile-title>
-                    </v-list-tile-content>
-                </v-list-tile>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                        <v-list-item-title>Logout</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
             </v-list>
         </v-menu>
-    </v-toolbar>
+    </v-app-bar>
 </template>
 
 <script>

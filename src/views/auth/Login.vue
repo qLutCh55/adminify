@@ -2,7 +2,7 @@
     <auth-container>
         <v-card width="320">
             <v-card-text>
-                <div class="text-xs-center display-3 grey--text text--darken-2 font-weight-light mb-4">
+                <div class="text-center display-3 grey--text text--darken-2 font-weight-light mb-4">
                     Login
                 </div>
                 <v-form @submit.native.prevent="doLogin" ref="loginForm" class="text-xs-center" lazy-validation>
@@ -33,18 +33,40 @@
                             value="1"
                             :disabled="attempting"
                     ></v-checkbox>
-                    <div class="text-xs-center">
-                        <v-btn type="submit" color="primary" :disabled="attempting" :loading="attempting">
+                    <div class="text-center">
+                        <v-btn
+                            type="submit"
+                            color="primary"
+                            :loading="attempting"
+                        >
                             Login
                         </v-btn>
                     </div>
                 </v-form>
-                <v-alert :value="message !== ''" color="error">{{ message }}</v-alert>
+                <v-alert
+                    :value="message !== ''"
+                    color="error"
+                >
+                    {{ message }}
+                </v-alert>
             </v-card-text>
             <v-card-actions>
-                <v-btn flat @click="goToRegisterPage" v-if="ableToRegister" :disabled="attempting">Register</v-btn>
+                <v-btn
+                    text
+                    @click="goToRegisterPage"
+                    v-if="ableToRegister"
+                    :disabled="attempting"
+                >
+                    Register
+                </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn flat @click="goToForgotPasswordPage" :disabled="attempting">Forgot Password?</v-btn>
+                <v-btn
+                    text
+                    @click="goToForgotPasswordPage"
+                    :disabled="attempting"
+                >
+                    Forgot Password?
+                </v-btn>
             </v-card-actions>
         </v-card>
     </auth-container>
