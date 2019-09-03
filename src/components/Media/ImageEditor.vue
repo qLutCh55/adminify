@@ -1,22 +1,86 @@
 <template>
-    <v-dialog v-model="show" fullscreen hide-overlay transition="dialog-bottom-transition">
+    <v-dialog
+        v-model="show"
+        fullscreen
+        hide-overlay
+        transition="dialog-bottom-transition"
+    >
         <v-card class="image-editor-card">
             <v-toolbar dark color="primary">
-                <v-btn icon dark @click.native="closeImageEdit">
+                <v-btn
+                    icon
+                    dark
+                    @click.native="closeImageEdit"
+                >
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
                 <v-toolbar-title>Image editor</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-toolbar-items>
-                    <v-btn dark flat @click.native="closeImageEdit" v-if="!cropping">Close</v-btn>
-                    <v-btn dark flat @click.native="cancelImageCrop" v-if="cropping && !setImageRatio">Cancel</v-btn>
-                    <v-btn dark flat @click.native="undoImageEdit" v-if="cropped">Undo</v-btn>
-                    <a :href="currentImage.url" :download="currentImage.name" class="v-btn v-btn--flat theme--dark"
-                       v-if="downloadable">Download</a>
-                    <v-btn dark flat @click.native="cropImage" v-if="cropping">Crop</v-btn>
+                    <v-btn
+                        dark
+                        text
+                        @click.native="closeImageEdit"
+                        v-if="!cropping"
+                    >
+                        Close
+                    </v-btn>
+                    <v-btn
+                        dark
+                        text
+                        @click.native="cancelImageCrop"
+                        v-if="cropping && !setImageRatio"
+                    >
+                        Cancel
+                    </v-btn>
+                    <v-btn
+                        dark
+                        text
+                        @click.native="undoImageEdit"
+                        v-if="cropped"
+                    >
+                        Undo
+                    </v-btn>
+
+                    <v-btn
+                        dark
+                        text
+                        @click.native="$refs.imageCropDownloadLink.click()"
+                        v-if="downloadable"
+                    >
+                        Download
+                    </v-btn>
+                    <a
+                        ref="imageCropDownloadLink"
+                        :href="currentImage.url"
+                        :download="currentImage.name"
+                        class="hidden"
+                        v-if="downloadable"
+                    ></a>
+                    <v-btn
+                        dark
+                        text
+                        @click.native="cropImage"
+                        v-if="cropping"
+                    >
+                        Crop
+                    </v-btn>
                     <template v-else>
-                        <v-btn dark flat @click.native="replaceImage" v-if="replaceAndReupload && cropped">Replace</v-btn>
-                        <v-btn dark flat @click.native="saveImage">Save</v-btn>
+                        <v-btn
+                            dark
+                            text
+                            @click.native="replaceImage"
+                            v-if="replaceAndReupload && cropped"
+                        >
+                            Replace
+                        </v-btn>
+                        <v-btn
+                            dark
+                            text
+                            @click.native="saveImage"
+                        >
+                            Save
+                        </v-btn>
                     </template>
                 </v-toolbar-items>
             </v-toolbar>
@@ -24,39 +88,49 @@
             <v-card-text class="image-editor-content">
                 <div class="editor" ref="editor">
                     <div class="canvas" @dblclick="dblclick">
-                        <img ref="image" :alt="currentImage.name" :src="currentImage.url" @load="start">
+                        <img
+                            ref="image"
+                            :alt="currentImage.name"
+                            :src="currentImage.url"
+                            @load="start"
+                        >
                     </div>
 
                     <div class="image-editor-toolbar" v-if="cropper">
                         <v-btn-toggle>
-                            <v-btn flat @click="moveCropper">
+                            <v-btn text @click="moveCropper">
                                 <v-icon>mdi-cursor-move</v-icon>
                             </v-btn>
-                            <v-btn flat @click="cropCropper" v-if="!setImageRatio">
+                            <v-btn text @click="cropCropper" v-if="!setImageRatio">
                                 <v-icon>mdi-crop</v-icon>
                             </v-btn>
-                            <v-btn flat @click="zoomInCropper">
+                            <v-btn text @click="zoomInCropper">
                                 <v-icon>mdi-magnify-plus-outline</v-icon>
                             </v-btn>
-                            <v-btn flat @click="zoomOutCropper">
+                            <v-btn text @click="zoomOutCropper">
                                 <v-icon>mdi-magnify-minus-outline</v-icon>
                             </v-btn>
-                            <v-btn flat @click="rotateLeftCropper">
+                            <v-btn text @click="rotateLeftCropper">
                                 <v-icon>mdi-rotate-left</v-icon>
                             </v-btn>
-                            <v-btn flat @click="rotateRightCropper">
+                            <v-btn text @click="rotateRightCropper">
                                 <v-icon>mdi-rotate-right</v-icon>
                             </v-btn>
-                            <v-btn flat @click="flipHorizontalCropper">
+                            <v-btn text @click="flipHorizontalCropper">
                                 <v-icon>mdi-swap-horizontal</v-icon>
                             </v-btn>
-                            <v-btn flat @click="flipVerticalCropper">
+                            <v-btn text @click="flipVerticalCropper">
                                 <v-icon>mdi-swap-vertical</v-icon>
                             </v-btn>
                             <v-menu offset-y v-if="ratios.length > 1">
-                                <v-btn flat slot="activator">
-                                    <v-icon>mdi-aspect-ratio</v-icon>
-                                </v-btn>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn
+                                        text
+                                        v-on="on"
+                                    >
+                                        <v-icon>mdi-aspect-ratio</v-icon>
+                                    </v-btn>
+                                </template>
                                 <v-list>
                                     <v-list-tile
                                             :class="{'active-list-item' : selectedRatio(item)}"
@@ -451,7 +525,7 @@
                 theBlob.lastModifiedDate = new Date();
                 theBlob.name = fileName;
                 return theBlob;
-            }
+            },
         }
     }
 </script>

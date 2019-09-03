@@ -12,7 +12,7 @@
                 </v-toolbar-items>
             </v-toolbar>
             <v-container grid-list-sm fluid>
-                <v-layout row wrap align-center justify-center>
+                <v-layout wrap align-center justify-center>
                     <v-flex xs12 md6>
                         <v-upload
                             url="/files/upload"
@@ -42,7 +42,7 @@
                             @start="drag=true"
                             @end="drag=true"
                             @change="handleReorder"
-                            class="layout wrap row"
+                            class="layout wrap"
                         >
                             <v-flex
                                 v-for="(file, index) in nodes"

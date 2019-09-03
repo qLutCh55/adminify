@@ -17,8 +17,10 @@
                     </v-btn>
                 </div>
                 <v-alert
+                    class="mt-3"
                     :value="message !== ''"
-                    color="success"
+                    color="error"
+                    dark
                 >
                     {{ message }}
                 </v-alert>
@@ -49,7 +51,7 @@
             resendVerificationEmail() {
                 this.message = '';
                 this.attempting = true;
-                window.axios.post('/email/resend', {errorHandle: true}).then(response => {
+                window.axios.post('/email/resend').then(response => {
 
                     this.attempting = false;
                     this.message = response.data.message;

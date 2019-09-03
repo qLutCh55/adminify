@@ -63,8 +63,10 @@
                     </div>
                 </v-form>
                 <v-alert
+                    class="mt-3"
                     :value="message !== ''"
                     color="error"
+                    dark
                 >
                     {{ message }}
                 </v-alert>
@@ -107,7 +109,7 @@
                 if (this.$refs.resetPasswordForm.validate()) {
                     this.message = '';
                     this.attempting = true;
-                    window.axios.post('/password/reset', this.user, {errorHandle: true}).then(response => {
+                    window.axios.post('/password/reset', this.user).then(response => {
                         this.$store.commit('auth/setUser', response.data.user);
                         this.attempting = false;
 

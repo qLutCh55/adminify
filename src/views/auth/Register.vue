@@ -130,7 +130,7 @@
                 if (this.$refs.registerForm.validate()) {
                     this.resetProblems();
                     this.attempting = true;
-                    window.axios.post('/register', this.register, {errorHandle: true}).then(response => {
+                    window.axios.post('/register', this.register).then(response => {
                         this.$store.commit('auth/setUser', response.data.user);
                         this.attempting = false;
 

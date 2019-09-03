@@ -7,7 +7,7 @@
     >
         <v-app-bar-nav-icon
             @click.stop="toggleLeftDrawer"
-            class="hidden-lg-and-up"
+            class="toggle-side-menu-button"
         ></v-app-bar-nav-icon>
 
         <v-spacer></v-spacer>

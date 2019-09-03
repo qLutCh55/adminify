@@ -44,8 +44,10 @@
                     </div>
                 </v-form>
                 <v-alert
+                    class="mt-3"
                     :value="message !== ''"
                     color="error"
+                    dark
                 >
                     {{ message }}
                 </v-alert>
@@ -113,7 +115,7 @@
                 this.message = '';
                 if (this.$refs.loginForm.validate()) {
                     this.attempting = true;
-                    window.axios.post('/login', this.login, {errorHandle: true}).then(response => {
+                    window.axios.post('/login', this.login).then(response => {
                         this.$store.commit('auth/setUser', response.data.user);
 
                         if (typeof response.data.verified !== 'undefined' && response.data.verified !== 'true') {

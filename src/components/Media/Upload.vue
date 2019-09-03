@@ -1,6 +1,6 @@
 <template>
     <v-card flat class="mb-1">
-        <div v-if="uploading" class="text-xs-center">
+        <div v-if="uploading" class="text-center">
             <template v-if="!multiple">
                 <v-progress-circular
                         :rotate="270"
@@ -15,15 +15,15 @@
             </template>
             <template v-else>
                 <v-list>
-                    <v-list-tile
+                    <v-list-item
                             v-for="(upload, index) in uploads"
                             :key="index"
                             avatar
                     >
-                        <v-list-tile-content>
-                            <v-list-tile-title v-text="upload.name"></v-list-tile-title>
-                        </v-list-tile-content>
-                        <v-list-tile-action>
+                        <v-list-item-content>
+                            <v-list-item-title v-text="upload.name"></v-list-item-title>
+                        </v-list-item-content>
+                        <v-list-item-action>
                             <v-progress-circular
                                     :rotate="270"
                                     :value="upload.progress"
@@ -31,8 +31,8 @@
                                     :indeterminate="upload.progress == 100"
                             >
                             </v-progress-circular>
-                        </v-list-tile-action>
-                    </v-list-tile>
+                        </v-list-item-action>
+                    </v-list-item>
                 </v-list>
             </template>
         </div>
@@ -55,7 +55,7 @@
                         @change="detectFiles"
                         :multiple="multiple"
                 />
-                <p>
+                <p class="mb-0">
                     Drag your {{ fileType }}<br> or click to browse
                 </p>
             </div>

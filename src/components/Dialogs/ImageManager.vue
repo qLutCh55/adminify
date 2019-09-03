@@ -12,7 +12,7 @@
                 </v-toolbar-items>
             </v-toolbar>
             <v-container grid-list-sm fluid>
-                <v-layout row wrap>
+                <v-layout wrap>
                     <v-flex xs12>
                         <v-upload
                                 url="/images/upload"
@@ -34,7 +34,7 @@
                                 @start="drag=true"
                                 @end="drag=true"
                                 @change="handleReorder"
-                                class="layout wrap row"
+                                class="layout wrap"
                         >
                             <v-flex
                                     v-for="(image, index) in nodes"

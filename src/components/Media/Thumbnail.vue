@@ -21,31 +21,35 @@
         </div>
         <div class="v-thumbnail-actions" v-if="changeable">
             <v-tooltip bottom>
-                <v-btn
-                    slot="activator"
-                    fab
-                    small
-                    color="primary"
-                    @click="changeThumbnail"
-                    :disabled="disabled"
-                >
-                    <v-icon>mdi-pencil</v-icon>
-                </v-btn>
+                <template v-slot:activator="{ on }">
+                    <v-btn
+                        v-on="on"
+                        fab
+                        small
+                        color="primary"
+                        @click="changeThumbnail"
+                        :disabled="disabled"
+                    >
+                        <v-icon>mdi-pencil</v-icon>
+                    </v-btn>
+                </template>
                 <span>Change</span>
             </v-tooltip>
 
             <v-tooltip bottom>
-                <v-btn
-                    slot="activator"
-                    fab
-                    small
-                    color="error"
-                    @click="deleteDialog = true"
-                    v-if="deleteable"
-                    :disabled="disabled"
-                >
-                    <v-icon>mdi-delete</v-icon>
-                </v-btn>
+                <template v-slot:activator="{ on }">
+                    <v-btn
+                        v-on="on"
+                        fab
+                        small
+                        color="error"
+                        @click="deleteDialog = true"
+                        v-if="deleteable"
+                        :disabled="disabled"
+                    >
+                        <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                </template>
                 <span>Delete</span>
             </v-tooltip>
         </div>
@@ -67,13 +71,13 @@
             @close="resetEditor"
             @save="upload"
         ></v-img-editor>
-        <v-delete
+        <v-confirm
             v-if="changeable"
             :dialog.sync="deleteDialog"
             :waiting.sync="deleteWaiting"
             @cancel="deleteDialog = false"
             @confirm="doDelete"
-        ></v-delete>
+        ></v-confirm>
     </div>
 </template>
 <script>

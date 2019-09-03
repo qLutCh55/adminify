@@ -38,8 +38,10 @@
                 </v-form>
 
                 <v-alert
+                    class="mt-3"
                     :value="message !== ''"
-                    color="success"
+                    color="error"
+                    dark
                 >
                     {{ message }}
                 </v-alert>
@@ -76,7 +78,7 @@
                 this.emailProblem = '';
                 if (this.$refs.resetPasswordForm.validate()) {
                     this.attempting = true;
-                    window.axios.post('/password/email', this.user, {errorHandle: true}).then(response => {
+                    window.axios.post('/password/email').then(response => {
                         this.attempting = false;
                         this.$refs.resetPasswordForm.reset();
                         this.message = response.data.message;

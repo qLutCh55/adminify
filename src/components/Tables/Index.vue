@@ -322,7 +322,6 @@
                 }
 
                 history.replaceState({path: url.decode(url.toString())}, '', url.decode(url.toString()));
-
             },
             setItemsPerPageParameter(itemsPerPage) {
                 let url = new window.domurl;
