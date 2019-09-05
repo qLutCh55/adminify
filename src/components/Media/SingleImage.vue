@@ -1,5 +1,8 @@
 <template>
-    <div class="single-image-wrapper" :style="aspectRatio == 1 ? 'max-width: 320px;' : ''">
+    <div
+            class="single-image-wrapper"
+            :style="aspectRatio == 1 ? 'max-width: 320px;' : ''"
+    >
         <v-card flat>
             <v-card-title v-if="title">
                 <h3 class="headline mb-0">{{ title }}</h3>
@@ -7,76 +10,86 @@
 
             <v-card-text v-if="uploading">
                 <v-progress-circular
-                    :rotate="270"
-                    :size="150"
-                    :width="10"
-                    :value="uploadingProgress"
-                    color="primary"
+                        :rotate="270"
+                        :size="150"
+                        :width="10"
+                        :value="uploadingProgress"
+                        color="primary"
                 >
                     {{ uploadingProgress }} %
                 </v-progress-circular>
             </v-card-text>
+
             <v-img
-                v-else-if="originalImage"
-                :src="originalImage"
-                :aspect-ratio="aspectRatio"
-                @click="changeImage"
+                    v-else-if="imageUrl"
+                    :src="imageUrl"
+                    :aspect-ratio="aspectRatio"
+                    @click="changeImage"
             ></v-img>
+
             <v-card-text v-else>
                 <v-btn
-                    @click="changeImage"
-                    color="primary"
-                    :disabled="disabled"
+                        @click="changeImage"
+                        color="primary"
+                        :disabled="disabled"
                 >
                     Click to upload
                 </v-btn>
             </v-card-text>
-            <v-card-actions v-if="originalImage">
+
+            <v-card-actions v-if="imageUrl">
                 <v-spacer></v-spacer>
+
                 <v-btn
-                    @click="changeImage"
-                    flat
-                    :disabled="disabled"
-                    color="success"
+                        @click="changeImage"
+                        text
+                        :disabled="disabled"
+                        color="success"
                 >
                     Replace
                 </v-btn>
+
                 <v-btn
-                    v-if="imageFlag !== 'cantDelete'"
-                    @click="deleteDialog = true"
-                    flat
-                    :disabled="disabled"
-                    color="error"
+                        v-if="imageFlag !== 'cantDelete'"
+                        @click="deleteDialog = true"
+                        text
+                        :disabled="disabled"
+                        color="error"
                 >
                     Remove
                 </v-btn>
+
             </v-card-actions>
         </v-card>
+
         <input
-            v-if="changeable"
-            hidden
-            type="file"
-            ref="imageInput"
-            class="hidden"
-            :accept="accept"
-            :disabled="disabled"
-            @change="onFileChange"
+                v-if="changeable"
+                hidden
+                type="file"
+                ref="imageInput"
+                class="hidden"
+                :accept="accept"
+                :disabled="disabled"
+                @change="onFileChange"
         >
+
         <v-img-editor
-            v-if="showEditor && changeable"
-            :image="newImage"
-            :ratios="[cropRatio]"
-            :viewMode="1"
-            @close="resetEditor"
-            @save="upload"
+                v-if="showEditor && changeable"
+                :image="newImage"
+                :ratios="[ratio]"
+                :viewMode="1"
+                @close="resetEditor"
+                @save="upload"
         ></v-img-editor>
-        <v-delete
-            v-if="changeable"
-            :dialog.sync="deleteDialog"
-            :waiting.sync="deleteWaiting"
-            @cancel="deleteDialog = false"
-            @confirm="doDelete"
-        ></v-delete>
+
+        <v-confirm
+                v-if="changeable"
+                :dialog.sync="deleteDialog"
+                :waiting.sync="deleteWaiting"
+                @cancel="deleteDialog = false"
+                @confirm="doDelete"
+        ></v-confirm>
+
     </div>
 </template>
 <script>
@@ -84,16 +97,19 @@
         data() {
             return {
                 originalImage: null,
-                fileDetails: {},
+
                 showEditor: false,
+
                 newImage: {
                     blob: null,
                     url: null,
                     name: null,
                     type: null,
                 },
+
                 uploading: false,
                 uploadingProgress: 0,
+
                 deleteDialog: false,
                 deleteWaiting: false,
 
@@ -102,74 +118,133 @@
         },
         name: 'Single-Image',
         props: {
-            'title': {
-                default: ''
-            },
             'image': {
-                type: String,
                 required: true
             },
             'flag': {
                 type: String,
                 default: ''
             },
-            'accept': {
-                type: String,
-                default: '*',
-            },
-            'model-id': {
-                type: Number,
+
+            'modelId': {
                 required: true,
             },
             'model': {
-                type: String,
                 required: true,
+            },
+
+            'title': {
+                default: ''
             },
             'role': {
                 type: String,
                 required: true
             },
-            'details': {
-                type: Object,
-            },
-            'width': {
+
+            'accept': {
                 type: String,
-                default: '200',
+                default: '*',
+            },
+
+            'width': {
+                default: null
             },
             'height': {
-                type: String,
-                default: '200',
+                default: null
             },
+
             'changeable': {
                 type: Boolean,
                 default: true,
             },
+
             'disabled': {
                 type: Boolean,
                 default: false,
             },
+
             'viewMode': {
-                type: Number,
                 default: 0
             },
-            'cropRatio': {
+
+            'ratio': {
                 default: '1:1',
             },
-            'aspect-ratio': {
-                default: '2.75',
-            }
         },
         computed: {
             deleteable() {
                 return this.imageFlag === 'canDelete';
+            },
+            aspectRatioArray() {
+                let ratios = this.ratio.split(':');
+
+                if (typeof ratios[1] == 'undefined') {
+                    ratios[1] = 1;
+                }
+
+                return ratios;
+            },
+            aspectRatio() {
+                let ratios = this.aspectRatioArray;
+
+                let finalRatio = parseInt(ratios[0]) / parseInt(ratios[1]);
+
+                return finalRatio.toFixed(2);
+            },
+            imageWidth () {
+                if (this.width) {
+                    return this.width;
+                }
+
+                let calculatedWidth = 1000;
+
+                if (this.originalImage && typeof this.originalImage.width !== 'undefined') {
+                    calculatedWidth = this.originalImage.width;
+                }
+
+                calculatedWidth = calculatedWidth / parseInt(this.aspectRatioArray[0]);
+
+                return Math.ceil(calculatedWidth);
+            },
+            imageHeight () {
+                if (this.height) {
+                    return this.height;
+                }
+
+                let calculatedHeight = 1000;
+
+                if (this.originalImage && typeof this.originalImage.height !== 'undefined') {
+                    calculatedHeight = this.originalImage.height;
+                }
+
+                calculatedHeight = calculatedHeight / parseInt(this.aspectRatioArray[1]);
+
+                return Math.ceil(calculatedHeight);
+            },
+            imageExtension () {
+                if (this.originalImage && typeof this.originalImage.type !== 'undefined') {
+                    return this.originalImage.type;
+                }
+
+                return 'jpeg';
+            },
+            imageUrl() {
+                if (this.originalImage) {
+                    if (typeof this.originalImage.hash !== 'undefined') {
+                        return this.buildUrlFromHash(this.originalImage.hash);
+                    }
+
+                    if (typeof this.originalImage.url !== 'undefined') {
+                        return this.originalImage.url;
+                    }
+                }
+
+                return '';
             }
         },
         watch: {},
         mounted() {
             this.originalImage = this.image;
-            if (this.details) {
-                this.fileDetails = this.details;
-            }
             this.imageFlag = this.flag;
         },
         methods: {
@@ -205,7 +280,6 @@
                 data.append('model', this.model);
                 data.append('single', true);
                 data.append('role', this.role);
-                Object.keys(this.fileDetails).forEach(key => data.append(key, this.fileDetails[key]));
                 data.append(this.role, image, image.name);
 
                 window.axios.post('/images/upload', data, {
@@ -218,7 +292,7 @@
                     }
                 }).then(response => {
                     this.$emit('update');
-                    this.originalImage = '/images/' + response.data.image.hash + '-ft=' + this.width + '+' + this.height + '.' + response.data.image.type;
+                    this.originalImage = response.data.image;
                     this.imageFlag = '';
                     this.uploading = false;
                     this.uploadingProgress = 0;
@@ -267,6 +341,7 @@
                 };
                 this.showEditor = false;
             },
+
             doDelete() {
                 this.deleteWaiting = true;
                 window.axios.post('/images/clear', {
@@ -276,12 +351,15 @@
                 }).then(response => {
                     this.$emit('update');
                     if (typeof response.data.thumbnail !== 'undefined') {
-                        this.originalImage = response.data.thumbnail;
+                        this.originalImage = {
+                            url: response.data.thumbnail
+                        };
                         this.imageFlag = 'cantDelete';
                     } else {
                         this.originalImage = null;
                         this.imageFlag = '';
                     }
+
                     this.deleteWaiting = false;
                     this.deleteDialog = false;
                     this.$toasted.show("Image removed", {
@@ -291,6 +369,21 @@
                     });
                 });
             },
+            buildUrlFromHash(hash, width = null, height = null, extension = null) {
+                if (!width) {
+                    width = this.imageWidth;
+                }
+
+                if (!height) {
+                    height = this.imageHeight;
+                }
+
+                if (!extension) {
+                    extension = this.imageExtension;
+                }
+
+                return '/images/' + hash + '-ft=' + width + '+' + height + '.' + extension;
+            }
         },
     }
 </script>

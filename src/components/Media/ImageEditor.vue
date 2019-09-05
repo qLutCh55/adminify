@@ -1,16 +1,16 @@
 <template>
     <v-dialog
-        v-model="show"
-        fullscreen
-        hide-overlay
-        transition="dialog-bottom-transition"
+            v-model="show"
+            fullscreen
+            hide-overlay
+            transition="dialog-bottom-transition"
     >
         <v-card class="image-editor-card">
             <v-toolbar dark color="primary">
                 <v-btn
-                    icon
-                    dark
-                    @click.native="closeImageEdit"
+                        icon
+                        dark
+                        @click.native="closeImageEdit"
                 >
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
@@ -18,66 +18,66 @@
                 <v-spacer></v-spacer>
                 <v-toolbar-items>
                     <v-btn
-                        dark
-                        text
-                        @click.native="closeImageEdit"
-                        v-if="!cropping"
+                            dark
+                            text
+                            @click.native="closeImageEdit"
+                            v-if="!cropping"
                     >
                         Close
                     </v-btn>
                     <v-btn
-                        dark
-                        text
-                        @click.native="cancelImageCrop"
-                        v-if="cropping && !setImageRatio"
+                            dark
+                            text
+                            @click.native="cancelImageCrop"
+                            v-if="cropping && !setImageRatio"
                     >
                         Cancel
                     </v-btn>
                     <v-btn
-                        dark
-                        text
-                        @click.native="undoImageEdit"
-                        v-if="cropped"
+                            dark
+                            text
+                            @click.native="undoImageEdit"
+                            v-if="cropped"
                     >
                         Undo
                     </v-btn>
 
                     <v-btn
-                        dark
-                        text
-                        @click.native="$refs.imageCropDownloadLink.click()"
-                        v-if="downloadable"
+                            dark
+                            text
+                            @click.native="$refs.imageCropDownloadLink.click()"
+                            v-if="downloadable"
                     >
                         Download
                     </v-btn>
                     <a
-                        ref="imageCropDownloadLink"
-                        :href="currentImage.url"
-                        :download="currentImage.name"
-                        class="hidden"
-                        v-if="downloadable"
+                            ref="imageCropDownloadLink"
+                            :href="currentImage.url"
+                            :download="currentImage.name"
+                            class="hidden"
+                            v-if="downloadable"
                     ></a>
                     <v-btn
-                        dark
-                        text
-                        @click.native="cropImage"
-                        v-if="cropping"
+                            dark
+                            text
+                            @click.native="cropImage"
+                            v-if="cropping"
                     >
                         Crop
                     </v-btn>
                     <template v-else>
                         <v-btn
-                            dark
-                            text
-                            @click.native="replaceImage"
-                            v-if="replaceAndReupload && cropped"
+                                dark
+                                text
+                                @click.native="replaceImage"
+                                v-if="replaceAndReupload && cropped"
                         >
                             Replace
                         </v-btn>
                         <v-btn
-                            dark
-                            text
-                            @click.native="saveImage"
+                                dark
+                                text
+                                @click.native="saveImage"
                         >
                             Save
                         </v-btn>
@@ -89,10 +89,10 @@
                 <div class="editor" ref="editor">
                     <div class="canvas" @dblclick="dblclick">
                         <img
-                            ref="image"
-                            :alt="currentImage.name"
-                            :src="currentImage.url"
-                            @load="start"
+                                ref="image"
+                                :alt="currentImage.name"
+                                :src="currentImage.url"
+                                @load="start"
                         >
                     </div>
 
@@ -125,21 +125,21 @@
                             <v-menu offset-y v-if="ratios.length > 1">
                                 <template v-slot:activator="{ on }">
                                     <v-btn
-                                        text
-                                        v-on="on"
+                                            text
+                                            v-on="on"
                                     >
                                         <v-icon>mdi-aspect-ratio</v-icon>
                                     </v-btn>
                                 </template>
                                 <v-list>
-                                    <v-list-tile
+                                    <v-list-item
                                             :class="{'active-list-item' : selectedRatio(item)}"
                                             v-for="(item, index) in ratios"
                                             :key="index"
                                             @click="setRatio(item)"
                                     >
-                                        <v-list-tile-title>{{ item }}</v-list-tile-title>
-                                    </v-list-tile>
+                                        <v-list-item-title>{{ item }}</v-list-item-title>
+                                    </v-list-item>
                                 </v-list>
                             </v-menu>
 
@@ -270,18 +270,13 @@
                 }
             },
             setAspectRatio() {
-                this.ratio = 'NaN';
-                if (this.cropRatio == '16:9') {
-                    this.ratio = 16 / 9
-                } else if (this.cropRatio == '4:3') {
-                    this.ratio = 4 / 3
-                } else if (this.cropRatio == '1:1') {
-                    this.ratio = 1 / 1
-                } else if (this.cropRatio == '2:3') {
-                    this.ratio = 2 / 3
-                } else if (this.cropRatio == '2:1') {
-                    this.ratio = 2 / 1
+                let ratioArray = this.cropRatio.split(':');
+
+                if (ratioArray[1] == 'undefined') {
+                    ratioArray[1] = 1;
                 }
+
+                this.ratio = parseInt(ratioArray[0]) / parseInt(ratioArray[1]);
             },
             changeAspectRatio() {
                 this.setAspectRatio();
