@@ -40,25 +40,24 @@
         <v-card-text v-if="loaded && !noList">
             <v-list>
                 <template v-for="(item, index) in nodes">
-                    <v-list-tile
+                    <v-list-item
                             :key="index"
-                            avatar
                             :class="activeTrack(index) ? 'primary' : ''"
                     >
-                        <v-list-tile-action>
+                        <v-list-item-action>
                             <v-icon v-if="activeTrack(index)" color="white">mdi-chart-bar-stacked</v-icon>
                             <v-icon class="playlist-play-button" @click="setTrackAndPlay(index)" v-else>mdi-play
                             </v-icon>
-                        </v-list-tile-action>
-                        <v-list-tile-content>
-                            <v-list-tile-title :class="activeTrack(index) ? 'white--text' : ''">{{
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title :class="activeTrack(index) ? 'white--text' : ''">{{
                                 item.metadata.basename }}
-                            </v-list-tile-title>
-                            <v-list-tile-sub-title :class="activeTrack(index) ? 'white--text' : ''">{{
+                            </v-list-item-title>
+                            <v-list-item-subtitle :class="activeTrack(index) ? 'white--text' : ''">{{
                                 humanFileSize(item.size) }}
-                            </v-list-tile-sub-title>
-                        </v-list-tile-content>
-                    </v-list-tile>
+                            </v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-list-item>
                     <v-divider v-if="index !== nodes.length - 1"></v-divider>
                 </template>
             </v-list>

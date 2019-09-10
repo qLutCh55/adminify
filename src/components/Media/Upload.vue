@@ -18,7 +18,6 @@
                     <v-list-item
                             v-for="(upload, index) in uploads"
                             :key="index"
-                            avatar
                     >
                         <v-list-item-content>
                             <v-list-item-title v-text="upload.name"></v-list-item-title>
