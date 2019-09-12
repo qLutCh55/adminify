@@ -27,7 +27,7 @@ const router = (routes = null, authRoutes = null) => {
 
     children.push({
         path: '/dashboard',
-        name: 'Dashboard',
+        name: 'Default-Dashboard',
         component: require('./views/Dashboard').default,
     });
 
