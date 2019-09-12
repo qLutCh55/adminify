@@ -4,6 +4,17 @@ export default {
     state: {
         roles: [],
         fetching: {},
+        users: {
+            deletatedIds: [],
+            users: [],
+            timestamp: null
+        },
+        getUsers(state) {
+            return state.users.users;
+        },
+        getDelegatedIds(state) {
+            return state.users.delegatedIds;
+        },
     },
 
     getters: {
@@ -59,7 +70,40 @@ export default {
         },
         addToResources(context, resource) {
             context.commit('appendToResource', resource);
-        }
+        },
+        getUsers(context) {
+            window.axios.post('/resources/getUsers', {
+                timestamp: context.state.users.timestamp
+            }).then(response => {
+                if (typeof response.data.users !== 'undefined') {
+                    let firstRequest = context.state.users.timestamp == undefined;
+                    context.commit('setUsers', response.data);
+                    if(!firstRequest) {
+                        context.dispatch('checkSelfUpdated');
+                    }
+                }
+            });
+            setTimeout(() => {
+                context.dispatch('getUsers');
+            }, 60000);
+        },
+        checkSelfUpdated(context) {
+            let authenticatedUser = context.rootState.auth.user;
+
+            if (context.state.users.delegatedIds.indexOf(authenticatedUser.id) > -1) {
+                let storeUser = context.state.users.users.find((user) => {
+                    return user.id == authenticatedUser.id;
+                });
+
+                if (typeof storeUser !== 'undefined' && authenticatedUser.updated_at !== storeUser.updated_at) {
+                    this.dispatch('auth/getUser');
+                }
+            } else {
+                this.dispatch('auth/logout').then(response => {
+                    window.location.href = window.location.href;
+                });
+            }
+        },
     },
 
     mutations: {
@@ -79,6 +123,9 @@ export default {
             if(typeof state[resource.name] !== 'undefined') {
                 state[resource.name].push(resource.object);
             }
+        },
+        setUsers(state, users) {
+            state.users = users;
         }
     }
 }

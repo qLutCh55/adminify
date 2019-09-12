@@ -43,6 +43,7 @@
                         this.$router.push('/email/verify');
                     }
                 });
+                this.$store.dispatch('resources/getUsers');
             }
         },
         methods: {}
