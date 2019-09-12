@@ -124,5 +124,34 @@ Vue.mixin({
 
             return false;
         },
+        userHasMinRole(user, role) {
+            let roles = store.getters['auth/getApplicationRoles'];
+            if (roles.hasOwnProperty(role)) {
+                let roleId = roles[role];
+
+                if (typeof user.roles !== 'undefined') {
+                    for (let i = 0; i < user.roles.length; i++) {
+                        let userRoleId = user.roles[i].id;
+                        if (userRoleId >= roleId) {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        },
+        userHasRole(user, role) {
+            let roles = store.getters['auth/getApplicationRoles'];
+            if (roles.hasOwnProperty(role)) {
+                let roleId = roles[role];
+
+                if (typeof user.roles !== 'undefined') {
+                    return authenticatedUser.role_ids.indexOf(roleId) > -1;
+                }
+            }
+
+            return false;
+        },
     }
 });
