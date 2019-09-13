@@ -1,6 +1,6 @@
 {
   "name": "adminify",
-  "version": "1.1.9",
+  "version": "1.2.0",
   "description": "Admin package for Laravel",
   "license": "MIT",
   "repository": "qLutCh55/adminify",

@@ -78,7 +78,7 @@
                             <v-icon v-else>mdi-bell-ring</v-icon>
                         </div>
                         <div class="notification-card-content" @click="viewNotification(index)">
-                            <div class="subtitle-2">{{ notification.message }}</div> <br>
+                            <div class="subtitle-2">{{ notification.message }}</div>
                             <div class="caption">{{ notification.created_at|fromNow }}</div>
                         </div>
                         <div class="notification-card-action">
