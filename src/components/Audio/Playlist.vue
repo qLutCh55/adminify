@@ -1,5 +1,5 @@
 <template>
-    <v-card class="text-xs-center" flat>
+    <v-card class="text-center" flat>
         <v-card-text v-if="loading || !loaded" class="audio-uploading-progress">
             <v-progress-circular
                     :size="50"
@@ -8,32 +8,70 @@
             ></v-progress-circular>
         </v-card-text>
         <v-card-text v-if="loaded" :class="noList ? 'pb-0' : ''">
-            <v-btn class="ma-0" outline icon color="primary" @click.native="playing ? pause() : play()"
-                   :disabled="loaded === false">
+            <v-btn
+                    outlined
+                    icon
+                    color="primary"
+                    @click.native="playing ? pause() : play()"
+                    :disabled="loaded === false"
+            >
                 <v-icon v-if="playing === false || paused === true">mdi-play</v-icon>
                 <v-icon v-else>mdi-pause</v-icon>
             </v-btn>
-            <v-btn class="ma-0" outline icon color="primary" v-if="nodes.length > 1" @click.native="previousTrack()"
-                   :disabled="loaded === false">
+            <v-btn
+                    outlined
+                    icon
+                    color="primary"
+                    v-if="nodes.length > 1"
+                    @click.native="previousTrack()"
+                    :disabled="loaded === false"
+            >
                 <v-icon>mdi-skip-previous</v-icon>
             </v-btn>
-            <v-btn class="ma-0" outline icon color="primary" @click.native="stop()" :disabled="loaded === false">
+            <v-btn
+                    outlined
+                    icon
+                    color="primary"
+                    @click.native="stop()"
+                    :disabled="loaded === false"
+            >
                 <v-icon>mdi-stop</v-icon>
             </v-btn>
-            <v-btn class="ma-0" outline icon color="primary" v-if="nodes.length > 1" @click.native="nextTrack()"
-                   :disabled="loaded === false">
+            <v-btn
+                    outlined
+                    icon
+                    color="primary"
+                    v-if="nodes.length > 1"
+                    @click.native="nextTrack()"
+                    :disabled="loaded === false"
+            >
                 <v-icon>mdi-skip-next</v-icon>
             </v-btn>
-            <v-btn class="ma-0" outline icon color="warning" @click.native="mute()" :disabled="loaded === false">
+            <v-btn
+                    outlined
+                    icon
+                    color="warning"
+                    @click.native="mute()"
+                    :disabled="loaded === false"
+            >
                 <v-icon v-if="isMuted === false">mdi-volume-high</v-icon>
                 <v-icon v-else>mdi-volume-off</v-icon>
             </v-btn>
-            <v-btn class="ma-0" outline icon color="success" @click.native="loaded ? download() : reload()">
+            <v-btn
+                    outlined
+                    icon color="success"
+                    @click.native="loaded ? download() : reload()"
+            >
                 <v-icon v-if="loaded === false">mdi-refresh</v-icon>
                 <v-icon v-else>mdi-download</v-icon>
             </v-btn>
-            <v-slider class="mt-2" hide-details @click.native="setPosition()" v-model="percentage"
-                      color="primary"></v-slider>
+            <v-slider
+                    class="mt-2"
+                    hide-details
+                    @click.native="setPosition()"
+                    v-model="percentage"
+                    color="primary"
+            ></v-slider>
             <p class="mb-0">{{ currentTime }} / {{ duration }}</p>
         </v-card-text>
         <audio ref="player" v-on:ended="ended" v-on:canplay="canPlay" :src="currentTrack.url"></audio>
@@ -50,11 +88,11 @@
                             </v-icon>
                         </v-list-item-action>
                         <v-list-item-content>
-                            <v-list-item-title :class="activeTrack(index) ? 'white--text' : ''">{{
-                                item.metadata.basename }}
+                            <v-list-item-title :class="activeTrack(index) ? 'white--text' : ''">
+                                {{ item.metadata.basename }}
                             </v-list-item-title>
-                            <v-list-item-subtitle :class="activeTrack(index) ? 'white--text' : ''">{{
-                                humanFileSize(item.size) }}
+                            <v-list-item-subtitle :class="activeTrack(index) ? 'white--text' : ''">
+                                {{ humanFileSize(item.size) }}
                             </v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
