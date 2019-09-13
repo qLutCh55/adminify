@@ -199,6 +199,11 @@ export default {
             localStorage.setItem('miniVariant', status)
         },
         setNotificationDrawerStatus(state, status) {
+            if (status) {
+                this.dispatch('application/disableMainScroll');
+            } else {
+                this.dispatch('application/enableMainScroll');
+            }
             state.notificationDrawer = status;
         },
         setFilterDrawerStatus(state, status) {
