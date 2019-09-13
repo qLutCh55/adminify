@@ -179,6 +179,15 @@ export default {
                 context.commit('setNotificationsCount', response.data.count);
             });
         },
+
+        disableMainScroll() {
+            let htmlElement = document.getElementsByTagName("html")[0];
+            htmlElement.setAttribute('data-overflow-hidden', '');
+        },
+        enableMainScroll() {
+            let htmlElement = document.getElementsByTagName("html")[0];
+            htmlElement.removeAttribute('data-overflow-hidden');
+        }
     },
 
     mutations: {

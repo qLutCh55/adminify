@@ -154,7 +154,7 @@
                 <v-card>
                     <v-card-title dark class="primary white--text">
 
-                        <div class="text--white text-uppercase subheading font-weight-medium pa-2">
+                        <div class="text--white text-uppercase subtitle-1 font-weight-medium pa-2">
                             {{ totalItems }}
                             <span v-if="totalItems === 1">Result</span>
                             <span v-else>Results</span>

@@ -44,3 +44,28 @@ Vue.filter('money', function (amount, currency) {
         return '-' + currency + (amount.substr(1));
     }
 });
+
+Vue.filter('duration', function (durationInSeconds) {
+
+    let totalSeconds = durationInSeconds;
+
+    let hours = Math.floor(totalSeconds / 3600);
+    let days = Math.floor(hours / 24);
+    hours %= 24;
+
+    totalSeconds %= 3600;
+    let minutes = Math.floor(totalSeconds / 60);
+    let seconds = totalSeconds % 60;
+
+    minutes = String(minutes).padStart(2, "0");
+    hours = String(hours).padStart(2, "0");
+    seconds = String(seconds).padStart(2, "0");
+
+    if (days == 0) {
+        return hours + ":" + minutes + ":" + seconds;
+    } else if (days == 1) {
+        return days + " day " + hours + ":" + minutes + ":" + seconds;
+    } else {
+        return days + " days " + hours + ":" + minutes + ":" + seconds;
+    }
+});
