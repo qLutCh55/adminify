@@ -5,6 +5,7 @@
             v-model="filterDrawer"
             fixed
             app
+            width="300"
     >
         <v-toolbar
             flat

@@ -5,6 +5,7 @@
         v-model="notificationDrawer"
         fixed
         app
+        width="300"
     >
         <v-toolbar
             flat
@@ -77,11 +78,11 @@
                             <v-icon v-else>mdi-bell-ring</v-icon>
                         </div>
                         <div class="notification-card-content" @click="viewNotification(index)">
-                            <span class="body-2">{{ notification.message }}</span> <br>
-                            <span class="caption">{{ notification.created_at|fromNow }}</span>
+                            <div class="subtitle-2">{{ notification.message }}</div> <br>
+                            <div class="caption">{{ notification.created_at|fromNow }}</div>
                         </div>
                         <div class="notification-card-action">
-                            <v-btn icon @click="deleteNotification(index)" flat>
+                            <v-btn icon @click="deleteNotification(index)" text>
                                 <v-icon color="error">mdi-close</v-icon>
                             </v-btn>
                         </div>
