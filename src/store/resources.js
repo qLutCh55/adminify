@@ -9,17 +9,17 @@ export default {
             users: [],
             timestamp: null
         },
-        getUsers(state) {
-            return state.users.users;
-        },
-        getDelegatedIds(state) {
-            return state.users.delegatedIds;
-        },
     },
 
     getters: {
         getRoles(state) {
             return state.roles;
+        },
+        getUsers(state) {
+            return state.users.users;
+        },
+        getDelegatedIds(state) {
+            return state.users.delegatedIds;
         },
     },
 
