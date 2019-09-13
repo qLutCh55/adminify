@@ -35,11 +35,11 @@ export default {
                 })
             });
         },
-        removePreLoader() {
+        removePreLoader(context) {
             let fadeTarget = document.getElementById('pre-loader');
             if (fadeTarget) {
-                setTimeout(function () {
-                    let fadeEffect = setInterval(function () {
+                setTimeout(() => {
+                    let fadeEffect = setInterval(() => {
                         if (!fadeTarget.style.opacity) {
                             fadeTarget.style.opacity = 1;
                         }
@@ -48,6 +48,7 @@ export default {
                         } else {
                             if (fadeTarget.parentNode !== null) {
                                 fadeTarget.parentNode.removeChild(fadeTarget);
+                                this.dispatch('application/enableMainScroll');
                             }
                             clearInterval(fadeEffect);
                         }
