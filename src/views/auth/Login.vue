@@ -117,7 +117,6 @@
                     this.attempting = true;
                     window.axios.post('/login', this.login).then(response => {
                         this.$store.commit('auth/setUser', response.data.user);
-                        this.$store.dispatch('resources/getUsers');
 
                         if (typeof response.data.verified !== 'undefined' && response.data.verified !== 'true') {
                             this.verificationRequired = true;
@@ -131,6 +130,8 @@
                             };
 
                             document.querySelector('meta[name="csrf-token"]').setAttribute("content", response.data.token);
+
+                            this.$store.dispatch('resources/getUsers');
 
                             this.$toasted.show('Login Successful!', {
                                 theme: "default",
