@@ -1,23 +1,21 @@
 <template>
     <v-container
-        fluid
-        grid-list-lg
-        class="pa-0"
+            fluid
+            grid-list-lg
+            class="pa-0"
+            v-if="breadcrumbs.length"
     >
         <v-layout>
             <v-flex xs12>
-<!--                <h3 class="display-1 mb-3">-->
-<!--                    {{ pageTitle }}-->
-<!--                </h3>-->
                 <v-breadcrumbs
-                    divider="/"
-                    :items="breadcrumbs"
-                    v-if="!dashboard"
-                    class="pb-0"
+                        divider="/"
+                        :items="breadcrumbs"
+                        v-if="!dashboard"
+                        class="pb-0"
                 >
                     <template
-                        slot="item"
-                        slot-scope="props"
+                            slot="item"
+                            slot-scope="props"
                     >
                         <li>
                             <router-link
@@ -47,6 +45,20 @@
             this.setBreadcrumbs();
             this.checkIfRouteDashboard();
         },
+        computed: {
+            lastRouteDisabledBreadcrumbs() {
+                let lastRouteIndex = 1;
+                if (this.$route.matched.length > 1) {
+                    lastRouteIndex = 2;
+                }
+
+                let lastRoute = this.$route.matched[this.$route.matched.length - lastRouteIndex];
+                return !!(
+                    typeof lastRoute.meta.breadcrumb == 'undefined' ||
+                    (typeof lastRoute.meta.breadcrumb !== 'undefined' && !lastRoute.meta.breadcrumb)
+                );
+            }
+        },
         methods: {
             setTitle() {
                 if (typeof this.$route.meta === 'string') {
@@ -59,16 +71,23 @@
                 }
             },
             setBreadcrumbs() {
+                if (this.lastRouteDisabledBreadcrumbs) {
+                    this.breadcrumbs = [];
+                    return;
+                }
+
                 for (var i = 0; i < this.$route.matched.length; i++) {
-                    if (i !== (this.$route.matched.length - 1) && this.$route.matched[i].meta.breadcrumb) {
-                        let link = this.$route.matched[i].path;
+                    let route = this.$route.matched[i];
+
+                    if (i !== (this.$route.matched.length - 1) && route.meta.breadcrumb) {
+                        let link = route.path;
 
                         if (link == "") {
                             link = "/";
                         }
 
                         // Replacing all the :id in route with the correct keys
-                        let keys = new RegExp(this.$route.matched[i].regex).exec(this.$route.matched[i].path);
+                        let keys = new RegExp(route.regex).exec(route.path);
                         if (keys.length > 1) {
                             for (var k = 0; k < keys.length; k++) {
                                 if (k !== 0) {
@@ -83,11 +102,14 @@
                             disabled = true;
                         }
 
-                        this.breadcrumbs.push({
-                            text: this.$route.matched[i].meta.breadcrumb,
+
+                        let breadcrumb = {
+                            text: route.meta.breadcrumb,
                             disabled: disabled,
                             link: link
-                        });
+                        };
+
+                        this.breadcrumbs.push(breadcrumb);
                     }
                 }
             },
