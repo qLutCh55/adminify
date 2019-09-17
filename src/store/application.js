@@ -4,6 +4,7 @@ export default {
     state: {
         name: document.body.getAttribute('data-name'),
         registration_allowed: document.body.getAttribute('data-reg') ? document.body.getAttribute('data-reg') : false,
+        social_login: document.body.getAttribute('data-google') ? document.body.getAttribute('data-google') : false,
 
         drawer: true,
         miniVariant: localStorage.getItem('miniVariant') ? (/true/i).test(localStorage.getItem('miniVariant')) : false,
@@ -26,6 +27,9 @@ export default {
         },
         getRegistrationStatus(state) {
             return state.registration_allowed;
+        },
+        getSocialLoginStatus(state) {
+            return state.social_login;
         },
 
         getDrawerStatus(state) {

@@ -35,37 +35,45 @@
                     ></v-checkbox>
                     <div class="text-center">
                         <v-btn
-                            type="submit"
-                            color="primary"
-                            :loading="attempting"
+                                type="submit"
+                                color="primary"
+                                :loading="attempting"
                         >
                             Login
                         </v-btn>
                     </div>
                 </v-form>
                 <v-alert
-                    class="mt-3"
-                    :value="message !== ''"
-                    color="error"
-                    dark
+                        class="mt-3"
+                        :value="message !== ''"
+                        color="error"
+                        dark
                 >
                     {{ message }}
                 </v-alert>
             </v-card-text>
             <v-card-actions>
                 <v-btn
-                    text
-                    @click="goToRegisterPage"
-                    v-if="ableToRegister"
-                    :disabled="attempting"
+                        text
+                        @click="goToRegisterPage"
+                        v-if="ableToRegister"
+                        :disabled="attempting"
                 >
                     Register
                 </v-btn>
+                <v-btn
+                        text
+                        @click="loginViaGoogle"
+                        color="error"
+                        v-else-if="ableToSocialLogin"
+                >
+                    Google login
+                </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn
-                    text
-                    @click="goToForgotPasswordPage"
-                    :disabled="attempting"
+                        text
+                        @click="goToForgotPasswordPage"
+                        :disabled="attempting"
                 >
                     Forgot Password?
                 </v-btn>
@@ -99,6 +107,9 @@
         computed: {
             ableToRegister() {
                 return this.$store.getters['application/getRegistrationStatus'];
+            },
+            ableToSocialLogin() {
+                return this.$store.getters['application/getSocialLoginStatus'];
             }
         },
         mounted() {
@@ -117,6 +128,7 @@
                     this.attempting = true;
                     window.axios.post('/login', this.login).then(response => {
                         this.$store.commit('auth/setUser', response.data.user);
+                        this.$store.dispatch('resources/getUsers');
 
                         if (typeof response.data.verified !== 'undefined' && response.data.verified !== 'true') {
                             this.verificationRequired = true;
@@ -130,8 +142,6 @@
                             };
 
                             document.querySelector('meta[name="csrf-token"]').setAttribute("content", response.data.token);
-
-                            this.$store.dispatch('resources/getUsers');
 
                             this.$toasted.show('Login Successful!', {
                                 theme: "default",
@@ -162,6 +172,10 @@
                     });
                 }
             },
+            loginViaGoogle() {
+                this.attempting = true;
+                location = '/login/google';
+            }
         }
     }
 </script>
