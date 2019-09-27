@@ -48,7 +48,8 @@
         computed: {
             lastRouteDisabledBreadcrumbs() {
                 let lastRouteIndex = 1;
-                if (this.$route.matched.length > 1) {
+
+                if (this.lastAndSecondLastRouteAreTheSame) {
                     lastRouteIndex = 2;
                 }
 
@@ -57,6 +58,18 @@
                     typeof lastRoute.meta.breadcrumb == 'undefined' ||
                     (typeof lastRoute.meta.breadcrumb !== 'undefined' && !lastRoute.meta.breadcrumb)
                 );
+            },
+            lastAndSecondLastRouteAreTheSame() {
+                if (this.$route.matched.length > 1) {
+                    let lastRoute = this.$route.matched[this.$route.matched.length - 1];
+                    let secondLastRoute = this.$route.matched[this.$route.matched.length - 2];
+
+                    if (this.trimRight(lastRoute.path, '/') === secondLastRoute.path) {
+                        return true;
+                    }
+                }
+
+                return false;
             }
         },
         methods: {
@@ -119,6 +132,13 @@
                 } else {
                     this.dashboard = false;
                 }
+            },
+            trimRight(string, charlist) {
+                if (charlist === undefined) {
+                    charlist = "\s";
+                }
+
+                return string.replace(new RegExp("[" + charlist + "]+$"), "");
             }
         },
         name: 'Breadcrumb',
