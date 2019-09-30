@@ -72,9 +72,12 @@
                             class="notification-card-avatar"
                             @click="viewNotification(index)"
                         >
-                            <v-avatar size="30" v-if="notification.thumbnail && imageExists(notification.thumbnail)">
-                                <img :src="notification.thumbnail">
-                            </v-avatar>
+                            <v-thumbnail
+                                    v-if="notification.thumbnail"
+                                    :thumbnail="notification.thumbnail"
+                                    width="30"
+                                    height="30"
+                            ></v-thumbnail>
                             <v-icon v-else>mdi-bell-ring</v-icon>
                         </div>
                         <div class="notification-card-content" @click="viewNotification(index)">
@@ -152,13 +155,6 @@
                     this.$store.commit('application/setNotificationsCount', 0);
                     this.notifications = [];
                 });
-            },
-
-            imageExists(imageUrl) {
-                let http = new XMLHttpRequest();
-                http.open('HEAD', imageUrl, false);
-                http.send();
-                return http.status !== 404;
             }
         },
     }

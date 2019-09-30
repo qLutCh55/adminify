@@ -65,15 +65,21 @@
                     slot="activator"
                     v-on="on"
                 >
-                    <v-avatar size="32">
-                        <img :src="loggedInUser.thumbnail">
-                    </v-avatar>
+                    <v-thumbnail
+                        :thumbnail="loggedInUser.thumbnail"
+                        width="32"
+                        height="32"
+                    ></v-thumbnail>
                 </v-btn>
             </template>
             <v-list class="pa-0">
                 <v-list-item>
                     <v-list-item-avatar>
-                        <img :src="loggedInUser.thumbnail">
+                        <v-thumbnail
+                            :thumbnail="loggedInUser.thumbnail"
+                            width="40"
+                            height="40"
+                        ></v-thumbnail>
                     </v-list-item-avatar>
                     <v-list-item-content>
                         <v-list-item-title>
