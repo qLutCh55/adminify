@@ -149,13 +149,13 @@
         },
         computed: {
             imageSrc() {
-                let url = '/avatar/random/unknown.jpeg';
+                let url = '/thumbnail/random/unknown.jpeg';
 
                 if (this.thumbnailImage) {
                     if (typeof this.thumbnailImage.id !== 'undefined' && typeof this.thumbnailImage.hash !== 'undefined') {
                         url = '/images/' + this.thumbnailImage.hash + '-ft=' + this.imageWidth + '+' + this.imageHeight + '.' + this.thumbnailImage.type;
                     } else if (typeof this.thumbnailImage.model !== 'undefined' && typeof this.thumbnailImage.modelId !== 'undefined') {
-                        url = '/avatar/' + this.thumbnailImage.model + '/' + this.thumbnailImage.modelId + '-s=' + this.imageWidth + 'x' + this.imageHeight + '.jpeg';
+                        url = '/thumbnail/' + this.thumbnailImage.model + '/' + this.thumbnailImage.modelId + '-s=' + this.imageWidth + 'x' + this.imageHeight + '.jpeg';
                     } else if (typeof this.thumbnailImage == 'string' && this.thumbnailImage !== '') {
                         url = this.thumbnailImage;
                     }

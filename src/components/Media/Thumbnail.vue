@@ -27,13 +27,13 @@
         },
         computed: {
             imageSrc() {
-                let url = '/avatar/random/unknown.jpeg';
+                let url = '/thumbnail/random/unknown.jpeg';
 
                 if (this.image) {
                     if (typeof this.image.id !== 'undefined' && typeof this.image.hash !== 'undefined') {
                         url = '/images/' + this.image.hash + '-ft=' + this.imageWidth + '+' + this.imageHeight + '.' + this.image.type;
                     } else if (typeof this.image.model !== 'undefined' && typeof this.image.modelId !== 'undefined') {
-                        url = '/avatar/' + this.image.model + '/' + this.image.modelId + '-s=' + this.imageWidth + 'x' + this.imageHeight + '.jpeg';
+                        url = '/thumbnail/' + this.image.model + '/' + this.image.modelId + '-s=' + this.imageWidth + 'x' + this.imageHeight + '.jpeg';
                     } else if (typeof this.image == 'string' && this.image !== '') {
                         url = this.image;
                     }
