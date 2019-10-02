@@ -145,7 +145,7 @@ export default {
                 for (let i = 0, len = filters.length; i < len; i++) {
                     let parts = filters[i].split('=', 2);
 
-                    let ignoreQueryParams = ['page', 'q', 'rows', 'descending', 'sortBy', 'startdate', 'enddate', 'tab'];
+                    let ignoreQueryParams = ['page', 'q', 'itemsPerPage', 'sortDesc', 'sortBy', 'startdate', 'enddate', 'tab'];
 
                     if (typeof parts[0] !== 'undefined' && !ignoreQueryParams.includes(parts[0]) && typeof parts[1] !== 'undefined' && parts[1] !== '') {
                         let filterName = parts[0];

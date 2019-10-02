@@ -291,12 +291,19 @@
                     this.options.sortBy = url.query.sortBy.split('|');
                 }
 
-                if (typeof url.query.descending !== 'undefined') {
-                    this.options.sortDesc = url.query.descending.split('|');
+                if (typeof url.query.sortDesc !== 'undefined') {
+                    let sortDesc = url.query.sortDesc.split('|');
+                    this.options.sortDesc = sortDesc.map((value) => {
+                        if (value == 'true') {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    });
                 }
 
-                if (typeof url.query.rows !== 'undefined') {
-                    this.options.itemsPerPage = Number(url.query.rows);
+                if (typeof url.query.itemsPerPage !== 'undefined') {
+                    this.options.itemsPerPage = Number(url.query.itemsPerPage);
                 }
 
                 let definitions = url.decode(url.query.toString()).split('&');
@@ -310,22 +317,22 @@
                 url.query.page = page;
                 history.replaceState({path: url.decode(url.toString())}, '', url.decode(url.toString()));
             },
-            setSortByParameter(sortBy, descending) {
+            setSortByParameter(sortBy, sortDesc) {
                 let url = new window.domurl;
 
                 if (sortBy.length) {
                     url.query.sortBy = sortBy.join('|');
-                    url.query.descending = descending.join('|');
+                    url.query.sortDesc = sortDesc.join('|');
                 } else {
                     delete url.query.sortBy;
-                    delete url.query.descending;
+                    delete url.query.sortDesc;
                 }
 
                 history.replaceState({path: url.decode(url.toString())}, '', url.decode(url.toString()));
             },
             setItemsPerPageParameter(itemsPerPage) {
                 let url = new window.domurl;
-                url.query.rows = itemsPerPage;
+                url.query.itemsPerPage = itemsPerPage;
                 history.replaceState({path: url.decode(url.toString())}, '', url.decode(url.toString()));
             },
             setQueryParameter(query) {
