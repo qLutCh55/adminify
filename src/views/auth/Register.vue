@@ -147,6 +147,8 @@
 
                             document.querySelector('meta[name="csrf-token"]').setAttribute("content", response.data.token);
 
+                            this.$store.dispatch('resources/getUsers');
+
                             this.$toasted.show('Registration Successful!', {
                                 theme: "default",
                                 position: "top-center",

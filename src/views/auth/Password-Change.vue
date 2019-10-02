@@ -126,6 +126,8 @@
 
                             document.querySelector('meta[name="csrf-token"]').setAttribute("content", response.data.token);
 
+                            this.$store.dispatch('resources/getUsers');
+
                             this.$toasted.show('Password successful changed!', {
                                 theme: "default",
                                 position: "top-center",
