@@ -352,10 +352,10 @@
 
             doDelete() {
                 this.deleteWaiting = true;
-                window.axios.post('/images/clear', {
+                window.axios.post('/images/delete', {
+                    id: this.originalImage.id,
                     modelId: this.modelId,
-                    model: this.model,
-                    role: this.role
+                    model: this.model
                 }).then(response => {
                     this.$emit('update');
                     if (typeof response.data.thumbnail !== 'undefined') {
