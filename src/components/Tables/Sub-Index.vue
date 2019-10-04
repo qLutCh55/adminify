@@ -1,16 +1,16 @@
 <template>
     <v-card
-        flat
-        class="mt-3"
+            flat
+            class="mt-3"
     >
         <v-card-title
-            dark
-            class="primary white--text pa-4"
+                dark
+                class="primary white--text pa-4"
         >
             <v-btn
-                color="white"
-                @click.native="triggerCreateEvent"
-                v-if="createButton"
+                    color="white"
+                    @click.native="triggerCreateEvent"
+                    v-if="createButton"
             >
                 <span v-if="createButtonText">
                     {{ createButtonText }}
@@ -41,28 +41,28 @@
             </div>
 
             <v-btn
-                icon
-                dark
-                @click.native.stop="searchBegin"
-                v-if="searchButton"
+                    icon
+                    dark
+                    @click.native.stop="searchBegin"
+                    v-if="searchButton"
             >
                 <v-icon>mdi-magnify</v-icon>
             </v-btn>
 
             <v-btn
-                icon
-                dark
-                @click.native.stop="clearFilters"
-                v-if="filterButton && filterCount > 0"
+                    icon
+                    dark
+                    @click.native.stop="clearFilters"
+                    v-if="filterButton && filterCount > 0"
             >
                 <v-icon>mdi-filter-remove-outline</v-icon>
             </v-btn>
 
             <v-btn
-                icon
-                dark
-                @click.native.stop="toggleFilterDrawer"
-                v-if="filterButton"
+                    icon
+                    dark
+                    @click.native.stop="toggleFilterDrawer"
+                    v-if="filterButton"
             >
                 <v-badge
                         color="error"
@@ -75,10 +75,10 @@
             </v-btn>
 
             <v-btn
-                icon
-                dark
-                @click.native.stop="fetchData"
-                v-if="refreshButton"
+                    icon
+                    dark
+                    @click.native.stop="fetchData"
+                    v-if="refreshButton"
             >
                 <v-icon>mdi-autorenew</v-icon>
             </v-btn>
@@ -97,9 +97,9 @@
         >
             <template v-slot:body="{ items }">
                 <tbody>
-                    <template v-for="(item, index) in items">
-                        <slot name="row" v-bind:item="item"></slot>
-                    </template>
+                <template v-for="(item, index) in items">
+                    <slot name="row" v-bind:item="item"></slot>
+                </template>
                 </tbody>
             </template>
         </v-data-table>
@@ -139,6 +139,8 @@
                     sortBy: [],
                     sortDesc: [],
                 },
+
+                previousQuery: '',
 
                 deleteDialog: false,
                 deleteWaiting: false,
@@ -289,6 +291,10 @@
             fetchData() {
                 this.fetching = true;
 
+                if (this.filter.searchQuery !== this.previousQuery) {
+                    this.options.page = 1;
+                }
+
                 this.setPageParameter(this.options.page);
 
                 this.setSortByParameter(this.options.sortBy, this.options.sortDesc);
@@ -311,6 +317,8 @@
                     this.items = response.data[this.pluralItemName].data;
                     this.totalItems = response.data[this.pluralItemName].total;
                     this.fetching = false;
+
+                    this.previousQuery = this.filter.searchQuery;
                 });
             },
 
@@ -354,7 +362,7 @@
             setPageParameter(page) {
                 let url = new window.domurl;
                 url.query.page = page;
-                history.replaceState({path: url.decode(url.toString())}, '', url.decode(url.toString()));
+                history.replaceState({path: url.toString()}, '', url.toString());
             },
             setSortByParameter(sortBy, sortDesc) {
                 let url = new window.domurl;
@@ -367,12 +375,12 @@
                     delete url.query.sortDesc;
                 }
 
-                history.replaceState({path: url.decode(url.toString())}, '', url.decode(url.toString()));
+                history.replaceState({path: url.toString()}, '', url.toString());
             },
             setItemsPerPageParameter(rowsPerPage) {
                 let url = new window.domurl;
                 url.query.itemsPerPage = itemsPerPage;
-                history.replaceState({path: url.decode(url.toString())}, '', url.decode(url.toString()));
+                history.replaceState({path: url.toString()}, '', url.toString());
             },
             setQueryParameter(query) {
                 let url = new window.domurl;
@@ -381,7 +389,7 @@
                 } else {
                     delete url.query.q;
                 }
-                history.replaceState({path: url.decode(url.toString())}, '', url.decode(url.toString()));
+                history.replaceState({path: url.toString()}, '', url.toString());
             },
 
             searchBegin() {

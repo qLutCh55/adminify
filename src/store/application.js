@@ -138,7 +138,7 @@ export default {
                 }
             }
 
-            window.history.replaceState({path: url.decode(url.toString())}, '', url.decode(url.toString()));
+            window.history.replaceState({path: url.toString()}, '', url.toString());
         },
         massToggleFilters(context, filters) {
             return new Promise((resolve, reject) => {
@@ -234,7 +234,15 @@ export default {
                 page = parseInt(url.query.page);
             }
 
-            history.replaceState({path: url.decode(url.toString())}, '', url.decode(url.toString()));
+            for (let x = 0, len = state.filters.length; x < len; x++) {
+                let filter = state.filters[x];
+
+                if (typeof url.query[filter.type] !== 'undefined') {
+                    delete url.query[filter.type];
+                }
+            }
+
+            history.replaceState({path: url.toString()}, '', url.toString());
         },
         setSelectedFilterArray(state, filterName) {
             state.selectedFilters[filterName] = [];
