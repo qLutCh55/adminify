@@ -43,6 +43,12 @@ const router = (routes = null, authRoutes = null) => {
     });
 
     paths.push({
+        path: '/unauthorized',
+        name: 'Unauthorized',
+        component: require('./views/errors/Page401').default
+    });
+
+    paths.push({
         path: '*',
         name: 'Error',
         component: require('./views/errors/Page404').default
