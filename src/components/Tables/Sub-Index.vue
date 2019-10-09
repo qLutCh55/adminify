@@ -377,7 +377,7 @@
 
                 history.replaceState({path: url.toString()}, '', url.toString());
             },
-            setItemsPerPageParameter(rowsPerPage) {
+            setItemsPerPageParameter(itemsPerPage) {
                 let url = new window.domurl;
                 url.query.itemsPerPage = itemsPerPage;
                 history.replaceState({path: url.toString()}, '', url.toString());
