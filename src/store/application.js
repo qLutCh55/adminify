@@ -19,6 +19,9 @@ export default {
         notificationDrawer: false,
 
         paginationRowsPerPage: [25, 50, 100],
+
+        leftTopBar: ADMINIFY_LEFT_TOP_MENU,
+        rightTopBar: ADMINIFY_RIGHT_TOP_MENU,
     },
 
     getters: {
@@ -72,7 +75,14 @@ export default {
 
         getPerPage(state) {
             return state.paginationRowsPerPage;
-        }
+        },
+
+        getLeftTopBar(state) {
+            return state.leftTopBar.sort((a, b) => (a.order > b.order) ? 1 : ((b.order > a.order) ? -1 : 0));
+        },
+        getRightTopBar(state) {
+            return state.rightTopBar.sort((a, b) => (a.order > b.order) ? 1 : ((b.order > a.order) ? -1 : 0));
+        },
     },
 
     actions: {
@@ -191,6 +201,38 @@ export default {
         enableMainScroll() {
             let htmlElement = document.getElementsByTagName("html")[0];
             htmlElement.removeAttribute('data-overflow-hidden');
+        },
+
+
+        addTopBarItem(context, data) {
+            let position = 'leftTopBar';
+            if (typeof data.position !== 'undefined' && data.position == 'right') {
+                position = 'rightTopBar';
+            }
+
+            data.position = position;
+            context.commit('addItemToTopBar', data);
+        },
+        updateTopBarItem(context, data) {
+            let position = 'leftTopBar';
+            if (typeof data.position !== 'undefined' && data.position == 'right') {
+                position = 'rightTopBar';
+            }
+
+            data.position = position;
+            context.commit('updateItemOnTopBar', data);
+        },
+        removeTopBarItem(context, data) {
+            let position = 'leftTopBar';
+            if (typeof data.position !== 'undefined' && data.position == 'right') {
+                position = 'rightTopBar';
+            }
+
+            data.position = position;
+            context.commit('removeItemFromTopBar', data);
+        },
+        resetTopBar(context) {
+            context.commit('setTopBarToDefault')
         }
     },
 
@@ -261,6 +303,44 @@ export default {
         },
         setNotificationsCount(state, query) {
             state.notifications = query;
+        },
+
+        setTopBarToDefault(state) {
+            state.leftTopBar = ADMINIFY_LEFT_TOP_MENU;
+            state.rightTopBar = ADMINIFY_RIGHT_TOP_MENU;
+        },
+        addItemToTopBar(state, data) {
+            state[data.position].push(data.item);
+        },
+        updateItemOnTopBar(state, data) {
+            if (typeof data.item.slug !== 'undefined') {
+                let topBarItem = state[data.position].find((item) => {
+                    return item.slug == data.item.slug;
+                });
+
+                if (topBarItem !== 'undefined') {
+                    topBarItem.text = data.item.text;
+                }
+            } else {
+                console.error('Slug not defined!');
+            }
+        },
+        removeItemFromTopBar(state, data) {
+            if (typeof data.slug !== 'undefined') {
+                let topBarItem = state[data.position].find((item) => {
+                    return item.slug == data.slug;
+                });
+
+                if (topBarItem !== 'undefined') {
+                    let updatedTopBar = state[data.position].filter((obj) => {
+                        return obj.slug !== data.slug;
+                    });
+
+                    state[data.position] = updatedTopBar;
+                }
+            } else {
+                console.error('Slug not defined!');
+            }
         }
     }
 }

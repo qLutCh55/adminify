@@ -1,16 +1,34 @@
 <template>
     <v-app-bar
-            color="primary"
-            dark
-            flat
-            app
+        color="primary"
+        dark
+        flat
+        app
     >
         <v-app-bar-nav-icon
             @click.stop="toggleLeftDrawer"
             class="toggle-side-menu-button"
         ></v-app-bar-nav-icon>
 
+        <template
+            v-for="(item, index) in leftTopMenu"
+        >
+            <top-menu-item
+                :key="'leftTopMenu-' + index"
+                :item="item"
+            ></top-menu-item>
+        </template>
+
         <v-spacer></v-spacer>
+
+        <template
+            v-for="(item, index) in rightTopMenu"
+        >
+            <top-menu-item
+                :key="'rightTopMenu-' + index"
+                :item="item"
+            ></top-menu-item>
+        </template>
 
         <v-tooltip
             bottom
@@ -42,9 +60,9 @@
             @click.stop="toggleNotificationDrawer"
         >
             <v-badge
-                    color="error"
-                    overlap
-                    v-if="notificationsCount > 0"
+                color="error"
+                overlap
+                v-if="notificationsCount > 0"
             >
                 <template v-slot:badge>
                     {{ notificationsCount }}
@@ -113,12 +131,17 @@
 </template>
 
 <script>
+    import TopMenuItem from './TopMenuItem';
+
     export default {
         name: 'Top-Menu',
         data() {
             return {
                 timer: null,
             }
+        },
+        components: {
+            TopMenuItem,
         },
         computed: {
             rightDrawer() {
@@ -143,7 +166,14 @@
             },
             canImpersonateReturn() {
                 return typeof this.loggedInUser.impersonator !== 'undefined' && this.loggedInUser.impersonator !== null;
-            }
+            },
+
+            leftTopMenu() {
+                return this.$store.getters['application/getLeftTopBar'];
+            },
+            rightTopMenu() {
+                return this.$store.getters['application/getRightTopBar'];
+            },
         },
         created() {
             this.$store.dispatch('application/getNotificationsCount');

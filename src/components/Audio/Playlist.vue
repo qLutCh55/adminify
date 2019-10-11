@@ -2,75 +2,75 @@
     <v-card class="text-center" flat>
         <v-card-text v-if="loading || !loaded" class="audio-uploading-progress">
             <v-progress-circular
-                    :size="50"
-                    color="primary"
-                    indeterminate
+                :size="50"
+                color="primary"
+                indeterminate
             ></v-progress-circular>
         </v-card-text>
         <v-card-text v-if="loaded" :class="noList ? 'pb-0' : ''">
             <v-btn
-                    outlined
-                    icon
-                    color="primary"
-                    @click.native="playing ? pause() : play()"
-                    :disabled="loaded === false"
+                outlined
+                icon
+                color="primary"
+                @click.native="playing ? pause() : play()"
+                :disabled="loaded === false"
             >
                 <v-icon v-if="playing === false || paused === true">mdi-play</v-icon>
                 <v-icon v-else>mdi-pause</v-icon>
             </v-btn>
             <v-btn
-                    outlined
-                    icon
-                    color="primary"
-                    v-if="nodes.length > 1"
-                    @click.native="previousTrack()"
-                    :disabled="loaded === false"
+                outlined
+                icon
+                color="primary"
+                v-if="nodes.length > 1"
+                @click.native="previousTrack()"
+                :disabled="loaded === false"
             >
                 <v-icon>mdi-skip-previous</v-icon>
             </v-btn>
             <v-btn
-                    outlined
-                    icon
-                    color="primary"
-                    @click.native="stop()"
-                    :disabled="loaded === false"
+                outlined
+                icon
+                color="primary"
+                @click.native="stop()"
+                :disabled="loaded === false"
             >
                 <v-icon>mdi-stop</v-icon>
             </v-btn>
             <v-btn
-                    outlined
-                    icon
-                    color="primary"
-                    v-if="nodes.length > 1"
-                    @click.native="nextTrack()"
-                    :disabled="loaded === false"
+                outlined
+                icon
+                color="primary"
+                v-if="nodes.length > 1"
+                @click.native="nextTrack()"
+                :disabled="loaded === false"
             >
                 <v-icon>mdi-skip-next</v-icon>
             </v-btn>
             <v-btn
-                    outlined
-                    icon
-                    color="warning"
-                    @click.native="mute()"
-                    :disabled="loaded === false"
+                outlined
+                icon
+                color="warning"
+                @click.native="mute()"
+                :disabled="loaded === false"
             >
                 <v-icon v-if="isMuted === false">mdi-volume-high</v-icon>
                 <v-icon v-else>mdi-volume-off</v-icon>
             </v-btn>
             <v-btn
-                    outlined
-                    icon color="success"
-                    @click.native="loaded ? download() : reload()"
+                outlined
+                icon color="success"
+                @click.native="loaded ? download() : reload()"
             >
                 <v-icon v-if="loaded === false">mdi-refresh</v-icon>
                 <v-icon v-else>mdi-download</v-icon>
             </v-btn>
             <v-slider
-                    class="mt-2"
-                    hide-details
-                    @click.native="setPosition()"
-                    v-model="percentage"
-                    color="primary"
+                class="mt-2"
+                hide-details
+                @click.native="setPosition()"
+                v-model="percentage"
+                color="primary"
             ></v-slider>
             <p class="mb-0">{{ currentTime }} / {{ duration }}</p>
         </v-card-text>
@@ -79,8 +79,8 @@
             <v-list>
                 <template v-for="(item, index) in nodes">
                     <v-list-item
-                            :key="index"
-                            :class="activeTrack(index) ? 'primary' : ''"
+                        :key="index"
+                        :class="activeTrack(index) ? 'primary' : ''"
                     >
                         <v-list-item-action>
                             <v-icon v-if="activeTrack(index)" color="white">mdi-chart-bar-stacked</v-icon>
@@ -151,6 +151,10 @@
                 type: Boolean,
                 default: false,
             },
+            'forceStop': {
+                type: Boolean,
+                default: false,
+            }
         },
         mounted() {
             this.nodes = this.files;
@@ -170,6 +174,13 @@
             lastTrack() {
                 return this.currentIndex == this.nodes.length - 1;
             },
+        },
+        watch: {
+            'forceStop'(newValue, oldValue) {
+                if (newValue !== oldValue) {
+                    this.stop();
+                }
+            }
         },
         methods: {
             setPosition() {
