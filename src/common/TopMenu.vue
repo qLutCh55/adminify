@@ -40,7 +40,7 @@
                     v-on="on"
                     @click.stop="impersonateReturn"
                 >
-                    <v-icon>mdi-account-arrow-left</v-icon>
+                    <v-icon>mdi-account-convert</v-icon>
                 </v-btn>
             </template>
             <span>
