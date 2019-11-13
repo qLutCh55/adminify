@@ -1,15 +1,18 @@
 <template>
     <v-dialog
-        v-model="dialog"
-        persistent
-        max-width="320"
+            v-model="dialog"
+            persistent
+            :max-width="maxWidth"
     >
         <v-card>
             <v-card-title>
                 <h3 class="headline mb-0">{{ title }}</h3>
             </v-card-title>
             <v-card-text>
-                <div class="text-center" v-if="waiting">
+                <div
+                        class="text-center"
+                        v-if="waiting"
+                >
                     <v-progress-circular
                             indeterminate
                             color="primary"
@@ -17,10 +20,10 @@
                 </div>
                 <div v-else>
                     <v-form
-                        ref="createForm"
-                        v-model="invalid"
-                        lazy-validation
-                        @keyup.enter.native="confirmDialog"
+                            ref="createForm"
+                            v-model="invalid"
+                            lazy-validation
+                            @keyup.enter.native="confirmDialog"
                     >
                         <slot name="content"></slot>
                     </v-form>
@@ -28,19 +31,19 @@
             </v-card-text>
             <v-card-actions>
                 <v-btn
-                    color="error"
-                    text
-                    @click.native="cancelDialog"
-                    :disabled="waiting || disabledActions"
+                        color="error"
+                        text
+                        @click.native="cancelDialog"
+                        :disabled="waiting || disabledActions"
                 >
                     {{ cancelLabel }}
                 </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn
-                    color="primary"
-                    text
-                    @click.native="confirmDialog"
-                    :disabled="waiting || disabledActions || disabledCreateAction || formInvalid"
+                        color="primary"
+                        text
+                        @click.native="confirmDialog"
+                        :disabled="waiting || disabledActions || disabledCreateAction || formInvalid"
                 >
                     {{ continueLabel }}
                 </v-btn>
@@ -89,6 +92,10 @@
             'cancel-label': {
                 type: String,
                 default: 'Cancel'
+            },
+            'max-width': {
+                type: String,
+                default: '320'
             }
         },
         watch: {
