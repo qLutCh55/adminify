@@ -6,7 +6,7 @@
     >
         <v-card>
             <v-card-title>
-                <h3 class="headline mb-0">{{ title }}</h3>
+                <h3 class="headline mb-0" v-html="title"></h3>
             </v-card-title>
             <v-card-text>
                 <div
