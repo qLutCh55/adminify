@@ -72,6 +72,10 @@ export default {
                     };
                     document.querySelector('meta[name="csrf-token"]').setAttribute("content", response.data.token);
 
+                    if (typeof window.Echo !== 'undefined') {
+                        window.Echo.options.csrfToken = response.data.token;
+                    }
+
                     resolve(response);
                 }).catch(error => {
                     reject(error);

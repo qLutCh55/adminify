@@ -1,6 +1,49 @@
 import Vue from 'vue';
 
 Vue.mixin({
+    created() {
+        this.echoInstance = null;
+        this.echoChannelName = null;
+    },
+    methods: {
+        setupWebsocket(channelName, callBack) {
+            if (typeof window.Echo !== 'undefined') {
+                if (
+                    typeof window[channelName + '_listener'] == 'undefined'
+                    ||
+                    (typeof window[channelName + '_listener'] !== 'undefined' && !window[channelName + '_listener'])
+                ) {
+                    window[channelName + '_listener'] = true;
+                    this.echoInstance = Echo.private('update-dom')
+                        .listen('.' + channelName, (e) => {
+                            callBack();
+                        });
+                    this.echoChannelName = channelName;
+                }
+            }
+        },
+    },
+    beforeDestroy() {
+        if (this.echoInstance && this.echoChannelName) {
+            if (this.echoChannelName == 'users') {
+                return;
+            }
+
+            if (typeof window.Echo !== 'undefined') {
+                if (
+                    typeof window[this.echoChannelName + '_listener'] == 'undefined'
+                    ||
+                    (typeof window[this.echoChannelName + '_listener'] !== 'undefined' && window[this.echoChannelName + '_listener'])
+                ) {
+                    window[this.echoChannelName + '_listener'] = false;
+                    this.echoInstance.stopListening('.' + this.echoChannelName);
+                }
+            }
+        }
+    }
+});
+
+Vue.mixin({
     methods: {
         slugify(string) {
             const a = 'àáäâãåèéëêìíïîòóöôùúüûñçßÿœæŕśńṕẃǵǹḿǘẍźḧ·/_,:;';

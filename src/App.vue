@@ -29,6 +29,10 @@
                 };
 
                 document.querySelector('meta[name="csrf-token"]').setAttribute("content", this.token);
+
+                if (typeof window.Echo !== 'undefined') {
+                    window.Echo.options.csrfToken = this.token;
+                }
             }
         },
         beforeDestroy() {

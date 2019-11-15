@@ -53,7 +53,8 @@
                             text
                             color="error"
                             small
-                            @click="clearAllNotifications">
+                            @click="clearAllNotifications"
+                        >
                             Clear all
                         </v-btn>
                     </v-list-item-content>
@@ -73,19 +74,26 @@
                             @click="viewNotification(index)"
                         >
                             <v-thumbnail
-                                    v-if="notification.thumbnail"
-                                    :thumbnail="notification.thumbnail"
-                                    width="30"
-                                    height="30"
+                                v-if="notification.thumbnail"
+                                :thumbnail="notification.thumbnail"
+                                width="30"
+                                height="30"
                             ></v-thumbnail>
                             <v-icon v-else>mdi-bell-ring</v-icon>
                         </div>
-                        <div class="notification-card-content" @click="viewNotification(index)">
+                        <div
+                            class="notification-card-content"
+                            @click="viewNotification(index)"
+                        >
                             <div class="subtitle-2">{{ notification.message }}</div>
                             <div class="caption">{{ notification.created_at|fromNow }}</div>
                         </div>
                         <div class="notification-card-action">
-                            <v-btn icon @click="deleteNotification(index)" text>
+                            <v-btn
+                                icon
+                                @click="deleteNotification(index)"
+                                text
+                            >
                                 <v-icon color="error">mdi-close</v-icon>
                             </v-btn>
                         </div>
@@ -138,7 +146,14 @@
             viewNotification(index) {
                 let notification = this.notifications[index];
 
-                if (typeof notification.url !== 'undefined' && notification.url) {
+                window.axios.post('/notifications/read', {identifier: notification.identifier})
+                    .then(response => {
+                        this.$store.commit('application/setNotificationsCount', response.data.count);
+                    });
+
+                if (notification.actionMethod == 0) {
+                    window.open(notification.url, "_blank");
+                } else if (notification.actionMethod == 1) {
                     this.$router.push(notification.url);
                 }
             },

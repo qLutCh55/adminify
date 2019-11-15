@@ -1,44 +1,44 @@
 <template>
     <v-app-bar
-        color="primary"
-        dark
-        flat
-        app
+            color="primary"
+            dark
+            flat
+            app
     >
         <v-app-bar-nav-icon
-            @click.stop="toggleLeftDrawer"
-            class="toggle-side-menu-button"
+                @click.stop="toggleLeftDrawer"
+                class="toggle-side-menu-button"
         ></v-app-bar-nav-icon>
 
         <template
-            v-for="(item, index) in leftTopMenu"
+                v-for="(item, index) in leftTopMenu"
         >
             <top-menu-item
-                :key="'leftTopMenu-' + index"
-                :item="item"
+                    :key="'leftTopMenu-' + index"
+                    :item="item"
             ></top-menu-item>
         </template>
 
         <v-spacer></v-spacer>
 
         <template
-            v-for="(item, index) in rightTopMenu"
+                v-for="(item, index) in rightTopMenu"
         >
             <top-menu-item
-                :key="'rightTopMenu-' + index"
-                :item="item"
+                    :key="'rightTopMenu-' + index"
+                    :item="item"
             ></top-menu-item>
         </template>
 
         <v-tooltip
-            bottom
-            v-if="canImpersonateReturn"
+                bottom
+                v-if="canImpersonateReturn"
         >
             <template v-slot:activator="{ on }">
                 <v-btn
-                    icon
-                    v-on="on"
-                    @click.stop="impersonateReturn"
+                        icon
+                        v-on="on"
+                        @click.stop="impersonateReturn"
                 >
                     <v-icon>mdi-account-convert</v-icon>
                 </v-btn>
@@ -56,13 +56,13 @@
 
 
         <v-btn
-            icon
-            @click.stop="toggleNotificationDrawer"
+                icon
+                @click.stop="toggleNotificationDrawer"
         >
             <v-badge
-                color="error"
-                overlap
-                v-if="notificationsCount > 0"
+                    color="error"
+                    overlap
+                    v-if="notificationsCount > 0"
             >
                 <template v-slot:badge>
                     {{ notificationsCount }}
@@ -74,19 +74,19 @@
 
 
         <v-menu
-            bottom
-            left
+                bottom
+                left
         >
             <template v-slot:activator="{ on }">
                 <v-btn
-                    icon
-                    slot="activator"
-                    v-on="on"
+                        icon
+                        slot="activator"
+                        v-on="on"
                 >
                     <v-thumbnail
-                        :thumbnail="loggedInUser.thumbnail"
-                        width="32"
-                        height="32"
+                            :thumbnail="loggedInUser.thumbnail"
+                            width="32"
+                            height="32"
                     ></v-thumbnail>
                 </v-btn>
             </template>
@@ -94,9 +94,9 @@
                 <v-list-item>
                     <v-list-item-avatar>
                         <v-thumbnail
-                            :thumbnail="loggedInUser.thumbnail"
-                            width="40"
-                            height="40"
+                                :thumbnail="loggedInUser.thumbnail"
+                                width="40"
+                                height="40"
                         ></v-thumbnail>
                     </v-list-item-avatar>
                     <v-list-item-content>
@@ -107,7 +107,10 @@
                 </v-list-item>
                 <v-divider></v-divider>
 
-                <v-list-item key="profile" @click="editProfile">
+                <v-list-item
+                        key="profile"
+                        @click="editProfile"
+                >
                     <v-list-item-action>
                         <v-icon>mdi-account</v-icon>
                     </v-list-item-action>
@@ -177,12 +180,31 @@
         },
         created() {
             this.$store.dispatch('application/getNotificationsCount');
-            this.timer = setInterval(this.fetchNotificationCount, 600 * 1000);
+            this.setupNotificationWebsocket();
         },
         beforeDestroy() {
-            clearInterval(this.timer);
+            if (this.timer) {
+                clearInterval(this.timer);
+            }
         },
         methods: {
+            setupNotificationWebsocket() {
+                if (typeof this.loggedInUser == 'undefined' || typeof this.loggedInUser.id == 'undefined') {
+                    setTimeout(() => {
+                        this.setupNotificationWebsocket();
+                    }, 100);
+                    return false;
+                }
+
+                if (typeof window.Echo !== 'undefined') {
+                    window.Echo.private('notifications.' + this.loggedInUser.id)
+                        .listen('.fetch-notifications', (e) => {
+                            this.fetchNotificationCount();
+                        });
+                } else {
+                    this.timer = setInterval(this.fetchNotificationCount, 600 * 1000);
+                }
+            },
             fetchNotificationCount() {
                 this.$store.dispatch('application/getNotificationsCount');
             },

@@ -26,8 +26,8 @@ export default {
     actions: {
         getResource(context, resource, timeout) {
             if (typeof window.Echo !== 'undefined') {
-                if (typeof window[resource + 'listener'] == 'undefined') {
-                    window[resource + 'listener'] = true;
+                if (typeof window[resource + '_listener'] == 'undefined') {
+                    window[resource + '_listener'] = true;
                     window.Echo.private('cache-clear').listen('.' + resource.toLowerCase(), (e) => {
                         context.commit('clearResource', resource);
                         context.dispatch('getResource', resource);
@@ -72,20 +72,39 @@ export default {
             context.commit('appendToResource', resource);
         },
         getUsers(context) {
-            window.axios.post('/resources/getUsers', {
-                timestamp: context.state.users.timestamp
-            }).then(response => {
-                if (typeof response.data.users !== 'undefined') {
-                    let firstRequest = context.state.users.timestamp == undefined;
-                    context.commit('setUsers', response.data);
-                    if(!firstRequest) {
-                        context.dispatch('checkSelfUpdated');
-                    }
+            if (typeof window.Echo !== 'undefined') {
+                if (typeof window['users_listener'] == 'undefined') {
+                    window['users_listener'] = true;
+                    window.Echo.private('update-dom').listen('.users', (e) => {
+                        window.axios.post('/resources/getUsers', {
+                            timestamp: context.state.users.timestamp
+                        }).then(response => {
+                            if (typeof response.data.users !== 'undefined') {
+                                let firstRequest = context.state.users.timestamp == undefined;
+                                context.commit('setUsers', response.data);
+                                if(!firstRequest) {
+                                    context.dispatch('checkSelfUpdated');
+                                }
+                            }
+                        });
+                    });
                 }
-            });
-            setTimeout(() => {
-                context.dispatch('getUsers');
-            }, 60000);
+            } else {
+                window.axios.post('/resources/getUsers', {
+                    timestamp: context.state.users.timestamp
+                }).then(response => {
+                    if (typeof response.data.users !== 'undefined') {
+                        let firstRequest = context.state.users.timestamp == undefined;
+                        context.commit('setUsers', response.data);
+                        if(!firstRequest) {
+                            context.dispatch('checkSelfUpdated');
+                        }
+                    }
+                });
+                setTimeout(() => {
+                    context.dispatch('getUsers');
+                }, 60000);
+            }
         },
         checkSelfUpdated(context) {
             let authenticatedUser = context.rootState.auth.user;
