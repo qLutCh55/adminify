@@ -1,41 +1,41 @@
 <template>
     <v-navigation-drawer
-        temporary
-        :right="right"
-        v-model="notificationDrawer"
-        fixed
-        app
-        width="300"
+            temporary
+            :right="right"
+            v-model="notificationDrawer"
+            fixed
+            app
+            width="300"
     >
         <v-toolbar
-            flat
-            dark
-            class="primary"
+                flat
+                dark
+                class="primary"
         >
             <v-toolbar-title>Notifications</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn
-                icon
-                @click.stop="toggleNotificationDrawer"
+                    icon
+                    @click.stop="toggleNotificationDrawer"
             >
                 <v-icon>mdi-close</v-icon>
             </v-btn>
         </v-toolbar>
 
         <div
-            class="text-center pa-5"
-            v-if="fetching"
+                class="text-center pa-5"
+                v-if="fetching"
         >
             <v-progress-circular
-                :size="40"
-                color="primary"
-                indeterminate
+                    :size="40"
+                    color="primary"
+                    indeterminate
             ></v-progress-circular>
         </div>
         <v-list
-            subheader
-            dense
-            v-else
+                subheader
+                dense
+                v-else
         >
             <template v-if="!notifications.length">
                 <v-list-item>
@@ -45,15 +45,15 @@
                 </v-list-item>
             </template>
             <template
-                v-else
+                    v-else
             >
                 <v-list-item>
                     <v-list-item-content class="align-center">
                         <v-btn
-                            text
-                            color="error"
-                            small
-                            @click="clearAllNotifications"
+                                text
+                                color="error"
+                                small
+                                @click="clearAllNotifications"
                         >
                             Clear all
                         </v-btn>
@@ -61,38 +61,38 @@
                 </v-list-item>
 
                 <v-card
-                    flat
-                    v-for="(notification, index) in notifications"
-                    :key="index"
-                    avatar
-                    class="notification-card"
-                    :class="notification.url ? 'pointer' : ''"
+                        flat
+                        v-for="(notification, index) in notifications"
+                        :key="index"
+                        avatar
+                        class="notification-card"
+                        :class="notification.url ? 'pointer' : ''"
                 >
                     <v-card-title class="pt-0">
                         <div
-                            class="notification-card-avatar"
-                            @click="viewNotification(index)"
+                                class="notification-card-avatar"
+                                @click="viewNotification(index)"
                         >
                             <v-thumbnail
-                                v-if="notification.thumbnail"
-                                :thumbnail="notification.thumbnail"
-                                width="30"
-                                height="30"
+                                    v-if="notification.thumbnail"
+                                    :thumbnail="notification.thumbnail"
+                                    width="30"
+                                    height="30"
                             ></v-thumbnail>
                             <v-icon v-else>mdi-bell-ring</v-icon>
                         </div>
                         <div
-                            class="notification-card-content"
-                            @click="viewNotification(index)"
+                                class="notification-card-content"
+                                @click="viewNotification(index)"
                         >
                             <div class="subtitle-2">{{ notification.message }}</div>
                             <div class="caption">{{ notification.created_at|fromNow }}</div>
                         </div>
                         <div class="notification-card-action">
                             <v-btn
-                                icon
-                                @click="deleteNotification(index)"
-                                text
+                                    icon
+                                    @click="deleteNotification(index)"
+                                    text
                             >
                                 <v-icon color="error">mdi-close</v-icon>
                             </v-btn>
@@ -151,10 +151,12 @@
                         this.$store.commit('application/setNotificationsCount', response.data.count);
                     });
 
-                if (notification.actionMethod == 0) {
-                    window.open(notification.url, "_blank");
-                } else if (notification.actionMethod == 1) {
-                    this.$router.push(notification.url);
+                if (notification.actionUrl) {
+                    if (notification.actionMethod == 0) {
+                        window.open(notification.actionUrl, "_blank");
+                    } else if (notification.actionMethod == 1) {
+                        this.$router.push(notification.actionUrl);
+                    }
                 }
             },
             deleteNotification(index) {
