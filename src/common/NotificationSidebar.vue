@@ -66,7 +66,7 @@
                         :key="index"
                         avatar
                         class="notification-card"
-                        :class="notification.url ? 'pointer' : ''"
+                        :class="notification.actionUrl ? 'pointer' : ''"
                 >
                     <v-card-title class="pt-0">
                         <div
