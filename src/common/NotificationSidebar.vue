@@ -137,19 +137,17 @@
             },
             getNotifications() {
                 this.fetching = true;
-                window.axios.post('/notifications/get').then(response => {
-                    this.notifications = response.data.notifications;
-                    this.$store.commit('application/setNotificationsCount', response.data.count);
-                    this.fetching = false;
-                });
+                window.axios.post('/notifications/get')
+                    .then(response => {
+                        this.notifications = response.data.notifications;
+                        this.$store.commit('application/setNotificationsCount', 0);
+                        this.fetching = false;
+                    });
             },
             viewNotification(index) {
                 let notification = this.notifications[index];
 
-                window.axios.post('/notifications/read', {identifier: notification.identifier})
-                    .then(response => {
-                        this.$store.commit('application/setNotificationsCount', response.data.count);
-                    });
+                window.axios.post('/notifications/open', {id: notification.id});
 
                 if (notification.actionUrl) {
                     if (notification.actionMethod == 0) {
@@ -162,13 +160,11 @@
             deleteNotification(index) {
                 let notification = this.notifications[index];
                 this.notifications.splice(index, 1);
-                window.axios.post('/notifications/remove', {identifier: notification.identifier}).then(response => {
-                    this.$store.commit('application/setNotificationsCount', response.data.count);
-                });
+                window.axios.post('/notifications/dismiss', {id: notification.id});
             },
 
             clearAllNotifications() {
-                window.axios.post('/notifications/clearAll').then(response => {
+                window.axios.post('/notifications/clear').then(response => {
                     this.$store.commit('application/setNotificationsCount', 0);
                     this.notifications = [];
                 });
@@ -176,4 +172,3 @@
         },
     }
 </script>
-

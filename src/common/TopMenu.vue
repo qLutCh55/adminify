@@ -198,8 +198,14 @@
 
                 if (typeof window.Echo !== 'undefined') {
                     window.Echo.private('notifications.' + this.loggedInUser.id)
-                        .listen('.fetch-notifications', (e) => {
-                            this.fetchNotificationCount();
+                        .listen('.update-notifications', (e) => {
+                            if (typeof e.unread !== 'undefined') {
+                                this.$store.commit('application/setNotificationsCount', e.unread);
+                            } else if (typeof e.notifications !== 'undefined') {
+                                this.$store.commit('application/setNotificationsCount', e.notifications);
+                            } else {
+                                this.fetchNotificationCount();
+                            }
                         });
                 } else {
                     this.timer = setInterval(this.fetchNotificationCount, 600 * 1000);
