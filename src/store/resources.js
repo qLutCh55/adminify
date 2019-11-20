@@ -76,35 +76,28 @@ export default {
                 if (typeof window['users_listener'] == 'undefined') {
                     window['users_listener'] = true;
                     window.Echo.private('update-dom').listen('.users', (e) => {
-                        window.axios.post('/resources/getUsers', {
-                            timestamp: context.state.users.timestamp
-                        }).then(response => {
-                            if (typeof response.data.users !== 'undefined') {
-                                let firstRequest = context.state.users.timestamp == undefined;
-                                context.commit('setUsers', response.data);
-                                if(!firstRequest) {
-                                    context.dispatch('checkSelfUpdated');
-                                }
-                            }
-                        });
+                        context.dispatch('fetchUsers');
                     });
                 }
             } else {
-                window.axios.post('/resources/getUsers', {
-                    timestamp: context.state.users.timestamp
-                }).then(response => {
-                    if (typeof response.data.users !== 'undefined') {
-                        let firstRequest = context.state.users.timestamp == undefined;
-                        context.commit('setUsers', response.data);
-                        if(!firstRequest) {
-                            context.dispatch('checkSelfUpdated');
-                        }
-                    }
-                });
                 setTimeout(() => {
                     context.dispatch('getUsers');
                 }, 60000);
             }
+            context.dispatch('fetchUsers');
+        },
+        fetchUsers(context) {
+            window.axios.post('/resources/getUsers', {
+                timestamp: context.state.users.timestamp
+            }).then(response => {
+                if (typeof response.data.users !== 'undefined') {
+                    let firstRequest = context.state.users.timestamp == undefined;
+                    context.commit('setUsers', response.data);
+                    if (!firstRequest) {
+                        context.dispatch('checkSelfUpdated');
+                    }
+                }
+            });
         },
         checkSelfUpdated(context) {
             let authenticatedUser = context.rootState.auth.user;
@@ -139,7 +132,7 @@ export default {
             state.fetching[resource] = false;
         },
         appendToResource(state, resource) {
-            if(typeof state[resource.name] !== 'undefined') {
+            if (typeof state[resource.name] !== 'undefined') {
                 state[resource.name].push(resource.object);
             }
         },
