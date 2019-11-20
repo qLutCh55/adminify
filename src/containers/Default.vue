@@ -8,7 +8,7 @@
 
         <v-content>
             <breadcrumbs></breadcrumbs>
-            <router-view v-if="loaded"></router-view>
+            <router-view v-if="loaded" :key="$route.fullPath"></router-view>
         </v-content>
 
         <filter-sidebar/>
