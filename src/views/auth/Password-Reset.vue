@@ -6,10 +6,10 @@
                     Reset Password
                 </div>
                 <v-form
-                    @submit.native.prevent="doPasswordReset"
-                    ref="resetPasswordForm"
-                    class="text-center"
-                    lazy-validation
+                        @submit.native.prevent="doPasswordReset"
+                        ref="resetPasswordForm"
+                        class="text-center"
+                        lazy-validation
                 >
                     <v-text-field
                             label="Email"
@@ -28,9 +28,9 @@
                     ></v-text-field>
                     <div class="text-center mt-2 mb-2">
                         <v-btn
-                            type="submit"
-                            color="primary"
-                            :loading="attempting"
+                                type="submit"
+                                color="primary"
+                                :loading="attempting"
                         >
                             Send Password Reset Link
                         </v-btn>
@@ -38,10 +38,10 @@
                 </v-form>
 
                 <v-alert
-                    class="mt-3"
-                    :value="message !== ''"
-                    color="error"
-                    dark
+                        class="mt-3"
+                        :value="message !== ''"
+                        color="error"
+                        dark
                 >
                     {{ message }}
                 </v-alert>
@@ -78,7 +78,7 @@
                 this.emailProblem = '';
                 if (this.$refs.resetPasswordForm.validate()) {
                     this.attempting = true;
-                    window.axios.post('/password/email').then(response => {
+                    window.axios.post('/password/email', this.user).then(response => {
                         this.attempting = false;
                         this.$refs.resetPasswordForm.reset();
                         this.message = response.data.message;
