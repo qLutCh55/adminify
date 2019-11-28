@@ -158,6 +158,10 @@
                 type: Boolean,
                 default: true,
             },
+            'cropper': {
+                type: Boolean,
+                default: true,
+            },
 
             'disabled': {
                 type: Boolean,
@@ -267,7 +271,12 @@
             },
             onFileChange(e) {
                 let fileList = e.target.files || e.dataTransfer.files;
-                this.showImageEditor(fileList[0]);
+
+                if (this.cropper) {
+                    this.showImageEditor(fileList[0]);
+                } else {
+                    this.upload(fileList[0]);
+                }
             },
             showImageEditor(image) {
                 if (typeof image !== 'undefined' && this.verifyFileType(image)) {

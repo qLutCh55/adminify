@@ -5,7 +5,12 @@
                 <div class="text-center display-3 grey--text text--darken-2 font-weight-light mb-4">
                     Login
                 </div>
-                <v-form @submit.native.prevent="doLogin" ref="loginForm" class="text-xs-center" lazy-validation>
+                <v-form
+                        @submit.native.prevent="doLogin"
+                        ref="loginForm"
+                        class="text-xs-center"
+                        lazy-validation
+                >
                     <v-text-field
                             label="Email"
                             v-model="login.email"
@@ -52,6 +57,18 @@
                     {{ message }}
                 </v-alert>
             </v-card-text>
+            <v-card-actions
+                    v-if="canRegisterAndSocialLogin"
+                    class="justify-center"
+            >
+                <v-btn
+                        @click="loginViaGoogle"
+                        color="error"
+                        v-if="ableToSocialLogin"
+                >
+                    Google login
+                </v-btn>
+            </v-card-actions>
             <v-card-actions>
                 <v-btn
                         text
@@ -110,7 +127,10 @@
             },
             ableToSocialLogin() {
                 return this.$store.getters['application/getSocialLoginStatus'];
-            }
+            },
+            canRegisterAndSocialLogin() {
+                return this.ableToRegister && this.ableToSocialLogin;
+            },
         },
         mounted() {
             document.title = this.$store.getters['application/getApplicationName'] + ' | Login';
