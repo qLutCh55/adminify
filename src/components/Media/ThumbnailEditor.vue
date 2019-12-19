@@ -202,6 +202,7 @@
             onFileChange(e) {
                 let fileList = e.target.files || e.dataTransfer.files;
                 this.showImageEditor(fileList[0]);
+                e.target.value = ''
             },
             showImageEditor(image) {
                 if (typeof image !== 'undefined' && this.verifyFileType(image)) {

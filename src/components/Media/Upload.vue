@@ -126,6 +126,7 @@
                 for (let i = 0, len = fileList.length; i < len; i++) {
                     this.uploadObject(fileList[i]);
                 }
+                e.target.value = '';
                 this.clearFileInput();
             },
             clearFileInput() {

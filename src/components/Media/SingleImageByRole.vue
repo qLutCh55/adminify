@@ -277,6 +277,8 @@
                 } else {
                     this.upload(fileList[0]);
                 }
+
+                e.target.value = ''
             },
             showImageEditor(image) {
                 if (typeof image !== 'undefined' && this.verifyFileType(image)) {
