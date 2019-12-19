@@ -10,9 +10,21 @@
     >
         <v-list-item>
             <v-list-item-avatar v-if="!miniVariant">
-                <v-icon color="orange">
-                    mdi-hubspot
-                </v-icon>
+                <template v-if="icon">
+                    <template v-if="typeof icon.hash !== 'undefined'">
+                        <img :src="iconSrc" width="40" height="40">
+                    </template>
+                    <template v-else>
+                        <v-icon :color="icon.color">
+                            mdi-{{ icon.icon }}
+                        </v-icon>
+                    </template>
+                </template>
+                <template v-else>
+                    <v-icon color="orange">
+                        mdi-hubspot
+                    </v-icon>
+                </template>
             </v-list-item-avatar>
             <v-list-item-content v-if="!miniVariant">
                 <v-list-item-title>
@@ -149,7 +161,13 @@
                 menu: ADMINIFY_MENU,
 
                 openPanel: null,
+
+                icon: null,
             }
+        },
+        mounted() {
+            this.checkAppIcon();
+            this.setupWebsocket('settings', this.checkAppIcon);
         },
         computed: {
             miniVariant: {
@@ -170,6 +188,11 @@
             },
             applicationName() {
                 return this.$store.getters['application/getApplicationName'];
+            },
+            iconSrc() {
+                if (typeof this.icon.hash !== 'undefined') {
+                    return '/images/' + this.icon.hash + '-ft=40+40.' + this.icon.type;
+                }
             }
         },
         methods: {
@@ -214,6 +237,13 @@
                     }
                 }
                 return false;
+            },
+
+            checkAppIcon() {
+                window.axios.post('/settings/getAppIcon')
+                    .then((response) => {
+                        this.icon = response.data.icon;
+                    });
             }
         }
     }
