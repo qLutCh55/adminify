@@ -152,8 +152,9 @@
                 if (notification.actionUrl) {
                     if (notification.actionMethod == 0) {
                         window.open(notification.actionUrl, "_blank");
-                    } else if (notification.actionMethod == 1) {
+                    } else if (notification.actionMethod == 1 && this.$route.path !== notification.actionUrl) {
                         this.$router.push(notification.actionUrl);
+                        Event.fire('notification-route-change');
                     }
                 }
             },

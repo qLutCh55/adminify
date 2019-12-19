@@ -8,7 +8,7 @@
 
         <v-content>
             <breadcrumbs></breadcrumbs>
-            <router-view v-if="loaded" :key="$route.fullPath"></router-view>
+            <router-view v-if="loaded" :key="key"></router-view>
         </v-content>
 
         <filter-sidebar/>
@@ -27,6 +27,7 @@
         data() {
             return {
                 loaded: false,
+                key: 0,
 
                 menu: ADMINIFY_MENU,
                 permissions: {},
@@ -62,6 +63,10 @@
                     this.checkPermissions(10);
                 });
             }
+
+            Event.listen('notification-route-change', () => {
+                this.key++;
+            });
         },
         watch: {
             '$route'() {
