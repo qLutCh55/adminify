@@ -8,7 +8,7 @@ let routes = [
         name: 'Password-Reset',
         component: require('../views/auth/Password-Reset').default,
     }, {
-        path: '/password/reset/:token/:email',
+        path: '/password/reset/:email/:token',
         name: 'Password-Change',
         component: require('../views/auth/Password-Change').default,
     },
