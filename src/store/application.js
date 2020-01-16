@@ -22,6 +22,8 @@ export default {
 
         leftTopBar: ADMINIFY_LEFT_TOP_MENU,
         rightTopBar: ADMINIFY_RIGHT_TOP_MENU,
+
+        webpSupported: false,
     },
 
     getters: {
@@ -83,6 +85,10 @@ export default {
         getRightTopBar(state) {
             return state.rightTopBar.sort((a, b) => (a.order > b.order) ? 1 : ((b.order > a.order) ? -1 : 0));
         },
+
+        getWebpSupport(state) {
+            return state.webpSupported;
+        }
     },
 
     actions: {
@@ -233,7 +239,25 @@ export default {
         },
         resetTopBar(context) {
             context.commit('setTopBarToDefault')
-        }
+        },
+
+        checkWebpSupport(context) {
+            return new Promise((resolve, reject) => {
+                const image = new Image();
+
+                image.onerror = (err) => {
+                    context.commit('setWebpSupport', false);
+                    resolve();
+                };
+                image.onload = () => {
+                    context.commit('setWebpSupport', true);
+                    resolve();
+                };
+
+                image.src = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA=';
+            });
+        },
+
     },
 
     mutations: {
@@ -341,6 +365,10 @@ export default {
             } else {
                 console.error('Slug not defined!');
             }
+        },
+
+        setWebpSupport(state, value) {
+            state.webpSupported = value;
         }
     }
 }

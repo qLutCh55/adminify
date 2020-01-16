@@ -13,6 +13,7 @@
         },
         created() {
             this.timer = setInterval(this.refreshToken, 3500 * 1000);
+            this.$store.dispatch('application/checkWebpSupport');
         },
         methods: {
             refreshToken() {
