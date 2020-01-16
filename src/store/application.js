@@ -250,6 +250,7 @@ export default {
                     resolve();
                 };
                 image.onload = () => {
+                    window.axios.defaults.headers.common['Accept'] = 'application/json, text/plain, image/webp, */*';
                     context.commit('setWebpSupport', true);
                     resolve();
                 };
