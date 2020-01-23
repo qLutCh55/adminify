@@ -65,6 +65,7 @@
                     v-if="filterButton"
             >
                 <v-badge
+                        :value="filterCount !== 0"
                         color="error"
                         left
                         overlap
