@@ -7,7 +7,7 @@
                 class="v-label v-label--active theme--light"
                 :class="(value !== '') ? 'small-label' : 'normal-label' "
             >
-                Description
+                {{ inputLabel }}
             </label>
             <editor-menu-bubble
                 :editor="editor"
@@ -112,7 +112,17 @@
             EditorMenuBubble,
         },
 
-        props: ['value'],
+        computed: {
+            'inputLabel'() {
+                if (this.label) {
+                    return this.label;
+                } else {
+                    return 'Description';
+                }
+            }
+        },
+
+        props: ['value', 'input'],
 
         data() {
             return {
