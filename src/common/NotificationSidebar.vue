@@ -18,7 +18,7 @@
                     icon
                     @click.stop="toggleNotificationDrawer"
             >
-                <v-icon>mdi-close</v-icon>
+                <v-icon>$mdiClose</v-icon>
             </v-btn>
         </v-toolbar>
 
@@ -79,7 +79,7 @@
                                     width="30"
                                     height="30"
                             ></v-thumbnail>
-                            <v-icon v-else>mdi-bell-ring</v-icon>
+                            <v-icon v-else>$mdiBellRing</v-icon>
                         </div>
                         <div
                                 class="notification-card-content"
@@ -94,7 +94,7 @@
                                     @click="deleteNotification(index)"
                                     text
                             >
-                                <v-icon color="error">mdi-close</v-icon>
+                                <v-icon color="error">$mdiClose</v-icon>
                             </v-btn>
                         </div>
                     </v-card-title>

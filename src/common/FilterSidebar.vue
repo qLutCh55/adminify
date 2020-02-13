@@ -18,7 +18,7 @@
                 icon
                 @click.stop="toggleFilterDrawer"
             >
-                <v-icon>mdi-close</v-icon>
+                <v-icon>$mdiClose</v-icon>
             </v-btn>
         </v-toolbar>
         <v-list subheader dense>

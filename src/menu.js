@@ -1,10 +1,10 @@
 let menu = [
     {
         'heading': 'Dashboard',
-        'icon': 'mdi-view-dashboard',
+        'icon': '$mdiViewDashboard',
         'children': [
             {
-                'icon': 'mdi-view-dashboard',
+                'icon': '$mdiViewDashboard',
                 'name': 'Dashboard',
                 'path': '/dashboard',
                 'restriction': 'none'

@@ -32,7 +32,7 @@
                 <v-text-field
                         :id="this.singleItemName +'-search'"
                         v-model="searchQuery"
-                        append-icon="mdi-close"
+                        append-icon="$mdiClose"
                         @click:append="searchEnd"
                         placeholder="Search"
                         hide-details
@@ -46,7 +46,7 @@
                     @click.native.stop="searchBegin"
                     v-if="searchButton"
             >
-                <v-icon>mdi-magnify</v-icon>
+                <v-icon>$mdiMagnify</v-icon>
             </v-btn>
 
             <v-btn
@@ -55,7 +55,7 @@
                     @click.native.stop="clearFilters"
                     v-if="filterButton && filterCount > 0"
             >
-                <v-icon>mdi-filter-remove-outline</v-icon>
+                <v-icon>$mdiFilterRemoveOutline</v-icon>
             </v-btn>
 
             <v-btn
@@ -71,7 +71,7 @@
                         overlap
                 >
                     <span slot="badge" v-if="filterCount !== 0">{{ filterCount }}</span>
-                    <v-icon>mdi-filter-variant</v-icon>
+                    <v-icon>$mdiFilterVariant</v-icon>
                 </v-badge>
             </v-btn>
 
@@ -81,7 +81,7 @@
                     @click.native.stop="fetchData"
                     v-if="refreshButton"
             >
-                <v-icon>mdi-autorenew</v-icon>
+                <v-icon>$mdiAutorenew</v-icon>
             </v-btn>
 
         </v-card-title>

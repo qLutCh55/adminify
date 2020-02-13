@@ -14,7 +14,7 @@
                     <v-text-field
                             label="Email"
                             v-model="user.email"
-                            prepend-icon="mdi-email-mark-as-unread"
+                            prepend-icon="$mdiEmailMarkAsUnread"
                             :rules="[
                                 v => !!v || 'Email is required.',
                                 $root.rules.email

@@ -15,8 +15,8 @@
                 @click.native="playing ? pause() : play()"
                 :disabled="loaded === false"
             >
-                <v-icon v-if="playing === false || paused === true">mdi-play</v-icon>
-                <v-icon v-else>mdi-pause</v-icon>
+                <v-icon v-if="playing === false || paused === true">$mdiPlay</v-icon>
+                <v-icon v-else>$mdiPause</v-icon>
             </v-btn>
             <v-btn
                 outlined
@@ -26,7 +26,7 @@
                 @click.native="previousTrack()"
                 :disabled="loaded === false"
             >
-                <v-icon>mdi-skip-previous</v-icon>
+                <v-icon>$mdiSkipPrevious</v-icon>
             </v-btn>
             <v-btn
                 outlined
@@ -35,7 +35,7 @@
                 @click.native="stop()"
                 :disabled="loaded === false"
             >
-                <v-icon>mdi-stop</v-icon>
+                <v-icon>$mdiStop</v-icon>
             </v-btn>
             <v-btn
                 outlined
@@ -45,7 +45,7 @@
                 @click.native="nextTrack()"
                 :disabled="loaded === false"
             >
-                <v-icon>mdi-skip-next</v-icon>
+                <v-icon>$mdiSkipNext</v-icon>
             </v-btn>
             <v-btn
                 outlined
@@ -54,16 +54,16 @@
                 @click.native="mute()"
                 :disabled="loaded === false"
             >
-                <v-icon v-if="isMuted === false">mdi-volume-high</v-icon>
-                <v-icon v-else>mdi-volume-off</v-icon>
+                <v-icon v-if="isMuted === false">$mdiVolumeHigh</v-icon>
+                <v-icon v-else>$mdiVolumeOff</v-icon>
             </v-btn>
             <v-btn
                 outlined
                 icon color="success"
                 @click.native="loaded ? download() : reload()"
             >
-                <v-icon v-if="loaded === false">mdi-refresh</v-icon>
-                <v-icon v-else>mdi-download</v-icon>
+                <v-icon v-if="loaded === false">$mdiRefresh</v-icon>
+                <v-icon v-else>$mdiDownload</v-icon>
             </v-btn>
             <v-slider
                 class="mt-2"
@@ -83,8 +83,8 @@
                         :class="activeTrack(index) ? 'primary' : ''"
                     >
                         <v-list-item-action>
-                            <v-icon v-if="activeTrack(index)" color="white">mdi-chart-bar-stacked</v-icon>
-                            <v-icon class="playlist-play-button" @click="setTrackAndPlay(index)" v-else>mdi-play
+                            <v-icon v-if="activeTrack(index)" color="white">$mdiChartBarStacked</v-icon>
+                            <v-icon class="playlist-play-button" @click="setTrackAndPlay(index)" v-else>$mdiPlay
                             </v-icon>
                         </v-list-item-action>
                         <v-list-item-content>

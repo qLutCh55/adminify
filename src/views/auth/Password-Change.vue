@@ -20,19 +20,19 @@
                     <v-text-field
                             label="Email"
                             v-model="user.email"
-                            prepend-icon="mdi-email-mark-as-unread"
+                            prepend-icon="$mdiEmailMarkAsUnread"
                             :autocomplete="'new-password'"
                             disabled
                     ></v-text-field>
                     <v-text-field
                             label="Password"
                             v-model="user.password"
-                            prepend-icon="mdi-lock"
+                            prepend-icon="$mdiLock"
                             :rules="[
                                 v => !!v || 'Password is required.',
                                 v => !!(v.length > 7) || 'Password needs to be at least 8 characters.'
                             ]"
-                            :append-icon="viewPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                            :append-icon="viewPassword ? '$mdiEye' : '$mdiEyeOff'"
                             @click:append="() => (viewPassword = !viewPassword)"
                             :type="viewPassword ? 'text' : 'password'"
                             :autocomplete="'new-password'"
@@ -41,12 +41,12 @@
                     <v-text-field
                             label="Confirm Password"
                             v-model="user.password_confirmation"
-                            prepend-icon="mdi-lock"
+                            prepend-icon="$mdiLock"
                             :rules="[
                                 v => !!v || 'Please confirm password.',
                                 v => !!(v == this.user.password) || 'Passwords need to be the same.'
                             ]"
-                            :append-icon="viewConfirmedPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                            :append-icon="viewConfirmedPassword ? '$mdiEye' : '$mdiEyeOff'"
                             @click:append="() => (viewConfirmedPassword = !viewConfirmedPassword)"
                             :type="viewConfirmedPassword ? 'text' : 'password'"
                             :autocomplete="'new-password'"

@@ -14,7 +14,7 @@
                     <v-text-field
                             label="Email"
                             v-model="login.email"
-                            prepend-icon="mdi-account"
+                            prepend-icon="$mdiAccount"
                             :rules="[ v => !!v || 'Email is required.' ]"
                             type="email"
                             autocapitalize="off"
@@ -24,9 +24,9 @@
                     <v-text-field
                             label="Password"
                             v-model="login.password"
-                            prepend-icon="mdi-lock"
+                            prepend-icon="$mdiLock"
                             :rules="[ v => !!v || 'Password is required.' ]"
-                            :append-icon="viewPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                            :append-icon="viewPassword ? '$mdiEye' : '$mdiEyeOff'"
                             @click:append="() => (viewPassword = !viewPassword)"
                             :type="viewPassword ? 'text' : 'password'"
                             :disabled="attempting"

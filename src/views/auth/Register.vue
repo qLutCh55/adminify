@@ -14,7 +14,7 @@
                     <v-text-field
                             label="Name"
                             v-model="register.name"
-                            prepend-icon="mdi-account"
+                            prepend-icon="$mdiAccount"
                             :rules="[ v => !!v || 'Name is required.' ]"
                             :error-messages="nameProblem ? nameProblem : ''"
                             type="name"
@@ -25,7 +25,7 @@
                     <v-text-field
                             label="Email"
                             v-model="register.email"
-                            prepend-icon="mdi-at"
+                            prepend-icon="$mdiAt"
                             :rules="[
                                 v => !!v || 'Email is required.',
                                 $root.rules.email
@@ -39,13 +39,13 @@
                     <v-text-field
                             label="Password"
                             v-model="register.password"
-                            prepend-icon="mdi-lock"
+                            prepend-icon="$mdiLock"
                             :rules="[
                                 v => !!v || 'Password is required.',
                                 v => !!(v.length > 8) || 'Password needs to be at least 8 characters.'
                             ]"
                             :error-messages="passwordProblem ? passwordProblem : ''"
-                            :append-icon="viewPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                            :append-icon="viewPassword ? '$mdiEye' : '$mdiEyeOff'"
                             @click:append="() => (viewPassword = !viewPassword)"
                             :type="viewPassword ? 'text' : 'password'"
                             :disabled="attempting"
@@ -53,12 +53,12 @@
                     <v-text-field
                             label="Confirm Password"
                             v-model="register.password_confirmation"
-                            prepend-icon="mdi-lock"
+                            prepend-icon="$mdiLock"
                             :rules="[
                                 v => !!v || 'Please confirm password.',
                                 v => !!(v == this.register.password) || 'Passwords need to be the same.'
                             ]"
-                            :append-icon="viewConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                            :append-icon="viewConfirmPassword ? '$mdiEye' : '$mdiEyeOff'"
                             @click:append="() => (viewConfirmPassword = !viewConfirmPassword)"
                             :type="viewConfirmPassword ? 'text' : 'password'"
                             :disabled="attempting"

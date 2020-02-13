@@ -25,7 +25,7 @@
                         :class="{ 'is-active': isActive.bold() }"
                         @click="commands.bold"
                     >
-                        <v-icon>mdi-format-bold</v-icon>
+                        <v-icon>$mdiFormatBold</v-icon>
                     </button>
 
                     <button
@@ -33,7 +33,7 @@
                         :class="{ 'is-active': isActive.italic() }"
                         @click="commands.italic"
                     >
-                        <v-icon>mdi-format-italic</v-icon>
+                        <v-icon>$mdiFormatItalic</v-icon>
                     </button>
 
                     <button
@@ -41,7 +41,7 @@
                         :class="{ 'is-active': isActive.strike() }"
                         @click="commands.strike"
                     >
-                        <v-icon>mdi-format-strikethrough</v-icon>
+                        <v-icon>$mdiFormatStrikethrough</v-icon>
                     </button>
 
                     <button
@@ -49,7 +49,7 @@
                         :class="{ 'is-active': isActive.underline() }"
                         @click="commands.underline"
                     >
-                        <v-icon>mdi-format-underline</v-icon>
+                        <v-icon>$mdiFormatUnderline</v-icon>
                     </button>
 
                     <form
@@ -69,7 +69,7 @@
                             class="menububble__button" @click="setLinkUrl(commands.link, null)"
                             type="button"
                         >
-                            <v-icon>mdi-link-variant-remove</v-icon>
+                            <v-icon>$mdiLinkVariantRemove</v-icon>
                         </button>
                     </form>
 
@@ -79,7 +79,7 @@
                             @click="showLinkMenu(getMarkAttrs('link'))"
                             :class="{ 'is-active': isActive.link() }"
                         >
-                            <v-icon>mdi-link-variant</v-icon>
+                            <v-icon>$mdiLinkVariant</v-icon>
                         </button>
                     </template>
 

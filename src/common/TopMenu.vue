@@ -40,7 +40,7 @@
                         v-on="on"
                         @click.stop="impersonateReturn"
                 >
-                    <v-icon>mdi-account-convert</v-icon>
+                    <v-icon>$mdiAccountConvert</v-icon>
                 </v-btn>
             </template>
             <span>
@@ -67,9 +67,9 @@
                 <template v-slot:badge>
                     {{ notificationsCount }}
                 </template>
-                <v-icon>mdi-bell-ring</v-icon>
+                <v-icon>$mdiBellRing</v-icon>
             </v-badge>
-            <v-icon v-else>mdi-bell-ring</v-icon>
+            <v-icon v-else>$mdiBellRing</v-icon>
         </v-btn>
 
 
@@ -112,7 +112,7 @@
                         @click="editProfile"
                 >
                     <v-list-item-action>
-                        <v-icon>mdi-account</v-icon>
+                        <v-icon>$mdiAccount</v-icon>
                     </v-list-item-action>
                     <v-list-item-content>
                         <v-list-item-title>My Profile</v-list-item-title>
@@ -122,7 +122,7 @@
 
                 <v-list-item @click="doLogout">
                     <v-list-item-action>
-                        <v-icon>mdi-lock-open</v-icon>
+                        <v-icon>$mdiLockOpen</v-icon>
                     </v-list-item-action>
                     <v-list-item-content>
                         <v-list-item-title>Logout</v-list-item-title>

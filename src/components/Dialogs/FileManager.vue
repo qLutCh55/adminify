@@ -3,7 +3,7 @@
         <v-card style="min-height: 100%;">
             <v-toolbar dark color="primary">
                 <v-btn icon dark @click="closeFileManager">
-                    <v-icon>mdi-close</v-icon>
+                    <v-icon>$mdiClose</v-icon>
                 </v-btn>
                 <v-toolbar-title>Files</v-toolbar-title>
                 <v-spacer></v-spacer>
@@ -52,15 +52,16 @@
                             >
                                 <v-card flat class="fileHandle" style="max-width: 170px;">
                                     <v-card-text class="text-xs-center">
-                                        <v-icon size="100">mdi {{ getFileIcon(file) }}</v-icon>
-                                        <p class="mb-0 truncate" :title="file.metadata.basename">{{
-                                            file.metadata.basename }}</p>
+                                        <v-icon size="100">{{ getFileIcon(file) }}</v-icon>
+                                        <p class="mb-0 truncate" :title="file.metadata.basename">
+                                            {{ file.metadata.basename }}
+                                        </p>
                                     </v-card-text>
                                     <v-card-actions class="justify-center align-center">
                                         <v-tooltip bottom v-if="file.viewable">
                                             <v-btn slot="activator" icon flat small color="warning" class="mx-0"
                                                    @click="handleViewFile(index)">
-                                                <v-icon>mdi-eye</v-icon>
+                                                <v-icon>$mdiEye</v-icon>
                                             </v-btn>
                                             <span>View</span>
                                         </v-tooltip>
@@ -68,7 +69,7 @@
                                         <v-tooltip bottom v-else>
                                             <v-btn slot="activator" icon flat small color="success" class="mx-0"
                                                    @click="handleDownloadFile(index)">
-                                                <v-icon>mdi-download</v-icon>
+                                                <v-icon>$mdiDownload</v-icon>
                                             </v-btn>
                                             <span>Download</span>
                                         </v-tooltip>
@@ -76,7 +77,7 @@
                                         <v-tooltip bottom>
                                             <v-btn slot="activator" icon flat small color="primary" class="mx-0"
                                                    @click="handleEditFile(file)">
-                                                <v-icon>mdi-pencil</v-icon>
+                                                <v-icon>$mdiPencil</v-icon>
                                             </v-btn>
                                             <span>Edit</span>
                                         </v-tooltip>
@@ -84,7 +85,7 @@
                                         <v-tooltip bottom>
                                             <v-btn slot="activator" icon flat small color="error" class="mx-0"
                                                    @click="handleDeleteFile(index)">
-                                                <v-icon>mdi-delete</v-icon>
+                                                <v-icon>$mdiDelete</v-icon>
                                             </v-btn>
                                             <span>Delete</span>
                                         </v-tooltip>
@@ -166,7 +167,7 @@
                             <v-text-field
                                 id="file-search"
                                 v-model="filter.searchQuery"
-                                append-icon="mdi-close"
+                                append-icon="$mdiClose"
                                 @click:append="searchEnd"
                                 placeholder="Search"
                                 hide-details
@@ -176,15 +177,15 @@
                         </div>
 
                         <v-btn icon dark @click.native.stop="searchBegin">
-                            <v-icon>mdi-magnify</v-icon>
+                            <v-icon>$mdiMagnify</v-icon>
                         </v-btn>
 
                         <v-btn icon dark @click.native.stop="fetchData">
-                            <v-icon>mdi-autorenew</v-icon>
+                            <v-icon>$mdiAutorenew</v-icon>
                         </v-btn>
 
                         <v-btn icon dark @click.native.stop="closeFileBrowserDialog">
-                            <v-icon>mdi-close</v-icon>
+                            <v-icon>$mdiClose</v-icon>
                         </v-btn>
 
                     </v-card-title>
@@ -221,7 +222,7 @@
                                                class="mx-0"
                                                @click="handleSelectFile(props.item)"
                                         >
-                                            <v-icon>mdi-check-decagram</v-icon>
+                                            <v-icon>$mdiCheckDecagram</v-icon>
                                         </v-btn>
                                         <span>Select</span>
                                     </v-tooltip>

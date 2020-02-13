@@ -70,7 +70,7 @@
             },
             'icon' : {
                 type: String,
-                default: 'mdi-delete-variant'
+                default: '$mdiDeleteVariant'
             }
         },
         mounted() {},

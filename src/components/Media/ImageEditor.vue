@@ -12,7 +12,7 @@
                         dark
                         @click.native="closeImageEdit"
                 >
-                    <v-icon>mdi-close</v-icon>
+                    <v-icon>$mdiClose</v-icon>
                 </v-btn>
                 <v-toolbar-title>Image editor</v-toolbar-title>
                 <v-spacer></v-spacer>
@@ -99,28 +99,28 @@
                     <div class="image-editor-toolbar" v-if="cropper">
                         <v-btn-toggle>
                             <v-btn text @click="moveCropper">
-                                <v-icon>mdi-cursor-move</v-icon>
+                                <v-icon>$mdiCursorMove</v-icon>
                             </v-btn>
                             <v-btn text @click="cropCropper" v-if="!setImageRatio">
-                                <v-icon>mdi-crop</v-icon>
+                                <v-icon>$mdiCrop</v-icon>
                             </v-btn>
                             <v-btn text @click="zoomInCropper">
-                                <v-icon>mdi-magnify-plus-outline</v-icon>
+                                <v-icon>$mdiMagnifyPlusOutline</v-icon>
                             </v-btn>
                             <v-btn text @click="zoomOutCropper">
-                                <v-icon>mdi-magnify-minus-outline</v-icon>
+                                <v-icon>$mdiMagnifyMinusOutline</v-icon>
                             </v-btn>
                             <v-btn text @click="rotateLeftCropper">
-                                <v-icon>mdi-rotate-left</v-icon>
+                                <v-icon>$mdiRotateLeft</v-icon>
                             </v-btn>
                             <v-btn text @click="rotateRightCropper">
-                                <v-icon>mdi-rotate-right</v-icon>
+                                <v-icon>$mdiRotateRight</v-icon>
                             </v-btn>
                             <v-btn text @click="flipHorizontalCropper">
-                                <v-icon>mdi-swap-horizontal</v-icon>
+                                <v-icon>$mdiSwapHorizontal</v-icon>
                             </v-btn>
                             <v-btn text @click="flipVerticalCropper">
-                                <v-icon>mdi-swap-vertical</v-icon>
+                                <v-icon>$mdiSwapVertical</v-icon>
                             </v-btn>
                             <v-menu offset-y v-if="ratios.length > 1">
                                 <template v-slot:activator="{ on }">
@@ -128,7 +128,7 @@
                                             text
                                             v-on="on"
                                     >
-                                        <v-icon>mdi-aspect-ratio</v-icon>
+                                        <v-icon>$mdiAspectRatio</v-icon>
                                     </v-btn>
                                 </template>
                                 <v-list>

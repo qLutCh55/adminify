@@ -3,7 +3,7 @@
         <v-card style="min-height: 100%;">
             <v-toolbar dark color="primary">
                 <v-btn icon dark @click="closeImageManager">
-                    <v-icon>mdi-close</v-icon>
+                    <v-icon>$mdiClose</v-icon>
                 </v-btn>
                 <v-toolbar-title>Images</v-toolbar-title>
                 <v-spacer></v-spacer>
@@ -72,7 +72,7 @@
                                                     class="mx-0"
                                                     @click="handleDeleteImageFile(index)"
                                             >
-                                                <v-icon>mdi-delete</v-icon>
+                                                <v-icon>$mdiDelete</v-icon>
                                             </v-btn>
                                             <span>Delete</span>
                                         </v-tooltip>

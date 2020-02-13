@@ -30,7 +30,7 @@
                         @click="changeThumbnail"
                         :disabled="disabled"
                     >
-                        <v-icon>mdi-pencil</v-icon>
+                        <v-icon>$mdiPencil</v-icon>
                     </v-btn>
                 </template>
                 <span>Change</span>
@@ -47,7 +47,7 @@
                         v-if="deleteable"
                         :disabled="disabled"
                     >
-                        <v-icon>mdi-delete</v-icon>
+                        <v-icon>$mdiDelete</v-icon>
                     </v-btn>
                 </template>
                 <span>Delete</span>

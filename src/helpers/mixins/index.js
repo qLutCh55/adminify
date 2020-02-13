@@ -99,13 +99,13 @@ Vue.mixin({
         },
         getFileIcon(file) {
             if (file.mime === 'application/pdf') {
-                return 'mdi-file-pdf';
+                return '$mdiFilePdf';
             } else if (file.mime.substring(0, 5) === 'image') {
-                return 'mdi-file-image';
+                return '$mdiFileImage';
             } else if (file.mime.substring(0, 5) === 'video') {
-                return 'mdi-file-video';
+                return '$mdiFileVideo';
             } else {
-                return 'mdi-file-document';
+                return '$mdiFileDocument';
             }
         },
         humanFileSize(size, si) {

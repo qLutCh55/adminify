@@ -16,13 +16,13 @@
                     </template>
                     <template v-else>
                         <v-icon :color="icon.color">
-                            mdi-{{ icon.icon }}
+                            $mdi{{ icon.icon }}
                         </v-icon>
                     </template>
                 </template>
                 <template v-else>
                     <v-icon color="orange">
-                        mdi-hubspot
+                        $mdiHubspot
                     </v-icon>
                 </template>
             </v-list-item-avatar>
@@ -37,7 +37,7 @@
                     icon
                     @click.stop="miniVariant = !miniVariant"
                 >
-                    <v-icon v-html="miniVariant ? 'mdi-chevron-right' : 'mdi-chevron-left'"></v-icon>
+                    <v-icon v-html="miniVariant ? '$mdiChevronRight' : '$mdiChevronLeft'"></v-icon>
                 </v-btn>
             </v-list-item-action>
         </v-list-item>
