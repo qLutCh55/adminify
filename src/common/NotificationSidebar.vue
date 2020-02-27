@@ -99,6 +99,22 @@
                         </div>
                     </v-card-title>
                 </v-card>
+
+                <infinite-loading
+                        @infinite="infiniteHandler"
+                >
+                    <div slot="spinner">
+                        <v-card-text class="d-flex justify-center align-center">
+                            <v-progress-circular
+                                    :size="50"
+                                    color="primary"
+                                    indeterminate
+                            ></v-progress-circular>
+                        </v-card-text>
+                    </div>
+                    <div slot="no-more">No more notifications</div>
+                    <div slot="no-results"></div>
+                </infinite-loading>
             </template>
         </v-list>
     </v-navigation-drawer>
@@ -114,6 +130,8 @@
 
                 fetching: true,
                 notifications: [],
+
+                amount: 20,
             }
         },
         computed: {
@@ -137,7 +155,10 @@
             },
             getNotifications() {
                 this.fetching = true;
-                window.axios.post('/notifications/get')
+                window.axios.post('/notifications/get', {
+                    offset: this.notifications.length,
+                    amount: this.amount
+                })
                     .then(response => {
                         this.notifications = response.data.notifications;
                         this.$store.commit('application/setNotificationsCount', 0);
@@ -169,7 +190,21 @@
                     this.$store.commit('application/setNotificationsCount', 0);
                     this.notifications = [];
                 });
-            }
+            },
+
+            infiniteHandler($state) {
+                window.axios.post('/notifications/get', {
+                    offset: this.notifications.length,
+                    amount: this.amount,
+                }).then(response => {
+                    if (response.data.notifications.length) {
+                        this.notifications.push(...response.data.notifications);
+                        $state.loaded();
+                    } else {
+                        $state.complete();
+                    }
+                });
+            },
         },
     }
 </script>
