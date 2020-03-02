@@ -139,6 +139,8 @@
                 set(value) {
                     if (value) {
                         this.getNotifications();
+                    } else {
+                        this.notifications = [];
                     }
                     this.$store.commit('application/setNotificationDrawerStatus', value);
                 },
