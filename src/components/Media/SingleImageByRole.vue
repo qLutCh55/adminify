@@ -5,7 +5,7 @@
     >
         <v-card flat>
             <v-card-title v-if="title">
-                <h3 class="headline mb-0">{{ title }}</h3>
+                <h3 class="headline mb-0" v-html="title"></h3>
             </v-card-title>
 
             <v-card-text v-if="uploading">
