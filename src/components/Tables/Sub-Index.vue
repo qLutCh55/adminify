@@ -104,20 +104,6 @@
                 </tbody>
             </template>
         </v-data-table>
-        <v-create
-                :dialog.sync="createDialog"
-                :waiting.sync="createWaiting"
-                :disabledActions.sync="disableActions"
-                :disabledCreateAction.sync="disableCreateAction"
-                :title="createDialogTitle"
-                :formErrors.sync="createErrors"
-                @cancel="cancelCreate"
-                @confirm="doCreate"
-        >
-            <template slot="content">
-                <slot name="createForm"></slot>
-            </template>
-        </v-create>
     </v-card>
 </template>
 <script>
@@ -146,10 +132,6 @@
                 deleteDialog: false,
                 deleteWaiting: false,
                 deleteItem: null,
-
-                createDialog: false,
-                createWaiting: false,
-                createItem: {},
             }
         },
         name: 'Sub-Index-Table',
@@ -171,15 +153,6 @@
                 type: String,
                 default: null
             },
-            'create-url': {
-                type: String,
-                default: null
-            },
-            'create-redirect-url': {
-                type: String,
-                default: null
-            },
-
             'headers': {
                 type: Array,
                 default: () => ([])
@@ -189,29 +162,9 @@
                 type: Boolean,
                 default: false
             },
-            'create-object': {
-                type: Object,
-                default: () => ({})
-            },
-            'create-errors': {
-                type: Array,
-                default: () => ([])
-            },
             'create-button-text': {
                 type: String,
                 default: ''
-            },
-            'create-dialog-heading': {
-                type: String,
-                default: ''
-            },
-            'disable-create-action': {
-                type: Boolean,
-                default: false
-            },
-            'disable-actions': {
-                type: Boolean,
-                default: false
             },
 
             'search-button': {
@@ -249,13 +202,6 @@
                     return this.$store.getters['application/getSearchQuery'];
                 }
             },
-            createDialogTitle() {
-                if (this.createDialogHeading) {
-                    return this.createDialogHeading;
-                } else {
-                    return 'Create ' + this.singleItemName;
-                }
-            }
         },
         watch: {
             'searchQuery'() {
@@ -280,8 +226,6 @@
         },
         mounted() {
             this.checkUrlForParams();
-            this.createItem = this.createObject;
-
             this.setupWebsocket(this.pluralItemName, this.fetchData);
         },
         methods: {
@@ -412,45 +356,8 @@
                 this.$store.dispatch('application/resetFilters');
             },
 
-            cancelCreate() {
-                this.createDialog = false;
-                this.createWaiting = false;
-                this.$emit('cancelCreate');
-            },
-            doCreate() {
-                if(!this.createWaiting) {
-                    this.createWaiting = true;
-                    setTimeout(() => {
-                        this.doCreate();
-                    }, 1000);
-                    return;
-                }
-
-                let url = '/' + this.pluralItemName + '/create';
-                if (this.createUrl) {
-                    url = this.createUrl;
-                }
-
-                window.axios.post(url, {[this.singleItemName]: this.createItem}).then(response => {
-                    this.$emit('itemCreated');
-                    this.$toasted.show(this.ucfirst(this.singleItemName) + " created", {
-                        theme: "default",
-                        position: "top-center",
-                        duration: 1500
-                    });
-
-                    let url = '/' + this.pluralItemName + '/edit/';
-                    if (this.createRedirectUrl) {
-                        url = this.createRedirectUrl;
-                    }
-
-                    this.$router.push(url + response.data.id);
-                    this.cancelCreate();
-                });
-            },
             triggerCreateEvent() {
-                this.$emit('beforeCreate');
-                this.createDialog = true
+                this.$emit('create');
             },
         },
     }

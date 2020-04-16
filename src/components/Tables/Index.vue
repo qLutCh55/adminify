@@ -242,8 +242,6 @@
         },
         mounted() {
             this.checkUrlForParams();
-            this.createItem = this.createObject;
-
             this.setupWebsocket(this.pluralItemName, this.fetchData);
         },
         methods: {
