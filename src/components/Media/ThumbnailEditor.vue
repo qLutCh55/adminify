@@ -44,7 +44,7 @@
                         small
                         color="error"
                         @click="deleteDialog = true"
-                        v-if="deleteable"
+                        v-show="deleteable"
                         :disabled="disabled"
                     >
                         <v-icon>$mdiDelete</v-icon>
