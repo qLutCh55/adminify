@@ -1,73 +1,74 @@
 <template>
     <div class="editor">
         <div
-            class="v-input__control"
+                class="v-input__control"
         >
             <label
-                class="v-label v-label--active theme--light"
-                :class="(value !== '') ? 'small-label' : 'normal-label' "
+                    class="v-label v-label--active theme--light"
+                    :class="(value !== '') ? 'small-label' : 'normal-label' "
             >
                 {{ inputLabel }}
             </label>
             <editor-menu-bubble
-                :editor="editor"
-                :keep-in-bounds="keepInBounds"
-                v-slot="{ commands, isActive, getMarkAttrs, menu }"
+                    :editor="editor"
+                    :keep-in-bounds="keepInBounds"
+                    v-slot="{ commands, isActive, getMarkAttrs, menu }"
             >
                 <div
-                    class="menububble"
-                    :class="{ 'is-active': menu.isActive }"
-                    :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
+                        v-if="editable"
+                        class="menububble"
+                        :class="{ 'is-active': menu.isActive }"
+                        :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
                 >
 
                     <button
-                        class="menububble__button"
-                        :class="{ 'is-active': isActive.bold() }"
-                        @click="commands.bold"
+                            class="menububble__button"
+                            :class="{ 'is-active': isActive.bold() }"
+                            @click="commands.bold"
                     >
                         <v-icon>$mdiFormatBold</v-icon>
                     </button>
 
                     <button
-                        class="menububble__button"
-                        :class="{ 'is-active': isActive.italic() }"
-                        @click="commands.italic"
+                            class="menububble__button"
+                            :class="{ 'is-active': isActive.italic() }"
+                            @click="commands.italic"
                     >
                         <v-icon>$mdiFormatItalic</v-icon>
                     </button>
 
                     <button
-                        class="menububble__button"
-                        :class="{ 'is-active': isActive.strike() }"
-                        @click="commands.strike"
+                            class="menububble__button"
+                            :class="{ 'is-active': isActive.strike() }"
+                            @click="commands.strike"
                     >
                         <v-icon>$mdiFormatStrikethrough</v-icon>
                     </button>
 
                     <button
-                        class="menububble__button"
-                        :class="{ 'is-active': isActive.underline() }"
-                        @click="commands.underline"
+                            class="menububble__button"
+                            :class="{ 'is-active': isActive.underline() }"
+                            @click="commands.underline"
                     >
                         <v-icon>$mdiFormatUnderline</v-icon>
                     </button>
 
                     <form
-                        class="menububble__form"
-                        v-if="linkMenuIsActive"
-                        @submit.prevent="setLinkUrl(commands.link, linkUrl)"
+                            class="menububble__form"
+                            v-if="linkMenuIsActive"
+                            @submit.prevent="setLinkUrl(commands.link, linkUrl)"
                     >
                         <input
-                            class="menububble__input"
-                            type="text"
-                            v-model="linkUrl"
-                            placeholder="https://"
-                            ref="linkInput"
-                            @keydown.esc="hideLinkMenu"
+                                class="menububble__input"
+                                type="text"
+                                v-model="linkUrl"
+                                placeholder="https://"
+                                ref="linkInput"
+                                @keydown.esc="hideLinkMenu"
                         />
                         <button
-                            class="menububble__button" @click="setLinkUrl(commands.link, null)"
-                            type="button"
+                                class="menububble__button" @click="setLinkUrl(commands.link, null)"
+                                type="button"
                         >
                             <v-icon>$mdiLinkVariantRemove</v-icon>
                         </button>
@@ -75,9 +76,9 @@
 
                     <template v-else>
                         <button
-                            class="menububble__button"
-                            @click="showLinkMenu(getMarkAttrs('link'))"
-                            :class="{ 'is-active': isActive.link() }"
+                                class="menububble__button"
+                                @click="showLinkMenu(getMarkAttrs('link'))"
+                                :class="{ 'is-active': isActive.link() }"
                         >
                             <v-icon>$mdiLinkVariant</v-icon>
                         </button>
@@ -87,8 +88,8 @@
                 </div>
             </editor-menu-bubble>
             <editor-content
-                class="editor__content"
-                :editor="editor"
+                    class="editor__content"
+                    :editor="editor"
             />
         </div>
     </div>
@@ -119,10 +120,13 @@
                 } else {
                     return 'Description';
                 }
+            },
+            editable() {
+                return !!(!this.disabled && !this.readonly);
             }
         },
 
-        props: ['value', 'input'],
+        props: ['value', 'input', 'disabled', 'readonly'],
 
         data() {
             return {
@@ -135,6 +139,7 @@
 
         mounted() {
             this.editor = new Editor({
+                editable: this.editable,
                 extensions: [
                     new BulletList(),
                     new ListItem(),
