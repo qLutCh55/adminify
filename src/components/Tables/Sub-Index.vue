@@ -222,6 +222,7 @@
                 if (!this.fetching) {
                     this.fetchData();
                 }
+                this.$emit('optionsChanged', this.options);
             },
         },
         mounted() {
