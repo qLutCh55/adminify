@@ -104,6 +104,7 @@
                 </tbody>
             </template>
         </v-data-table>
+        <slot></slot>
     </v-card>
 </template>
 <script>
