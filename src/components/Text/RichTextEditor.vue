@@ -126,7 +126,7 @@
             }
         },
 
-        props: ['value', 'input', 'disabled', 'readonly'],
+        props: ['label', 'value', 'input', 'disabled', 'readonly'],
 
         data() {
             return {
