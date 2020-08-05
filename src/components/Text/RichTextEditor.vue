@@ -52,6 +52,23 @@
                     >
                         <v-icon>$mdiFormatUnderline</v-icon>
                     </button>
+    
+                    <button
+                        class="menububble__button"
+                        :class="{ 'is-active': isActive.bullet_list() }"
+                        @click="commands.bullet_list"
+                    >
+                        <v-icon>$mdiFormatListBulleted</v-icon>
+                    </button>
+    
+                    <button
+                        class="menububble__button"
+                        :class="{ 'is-active': isActive.ordered_list() }"
+                        @click="commands.ordered_list"
+                    >
+                        <v-icon>$mdiFormatListNumbered</v-icon>
+                    </button>
+                    
 
                     <form
                             class="menububble__form"
