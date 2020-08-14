@@ -74,6 +74,8 @@
                     <v-icon>$mdiFilterVariant</v-icon>
                 </v-badge>
             </v-btn>
+    
+            <slot name="additional-buttons"></slot>
 
             <v-btn
                     icon
