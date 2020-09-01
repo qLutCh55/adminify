@@ -224,6 +224,7 @@
                 data.append('role', 'thumbnail');
                 Object.keys(this.fileDetails).forEach(key => data.append(key, this.fileDetails[key]));
                 data.append('thumbnail', image, image.name);
+                data.append('single', true);
 
                 window.axios.post('/images/upload', data, {
                     errorHandle: true,
