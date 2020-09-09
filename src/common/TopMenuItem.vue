@@ -91,7 +91,7 @@
         methods: {
             doItemAction() {
                 if (typeof this.item.eventName !== 'undefined' && this.item.eventName) {
-                    Event.fire(this.item.eventName);
+                    AdminifyEvent.fire(this.item.eventName);
                 }
 
                 if (typeof this.item.route !== 'undefined' && this.item.route && this.$route.path !== this.item.route) {

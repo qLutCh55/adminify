@@ -63,8 +63,8 @@
                     this.checkPermissions(10);
                 });
             }
-
-            Event.listen('notification-route-change', () => {
+    
+            AdminifyEvent.listen('notification-route-change', () => {
                 this.key++;
             });
         },
