@@ -1,20 +1,20 @@
 <template>
     <v-container
-            fluid
-            grid-list-lg
+        fluid
+        grid-list-lg
     >
         <v-layout wrap>
             <v-flex xs12>
                 <v-slide-y-transition mode="out-in">
                     <v-card>
                         <v-card-title
-                                dark
-                                class="primary white--text pa-4"
+                            dark
+                            class="primary white--text pa-4"
                         >
                             <v-btn
-                                    color="white"
-                                    @click.native="triggerCreateEvent"
-                                    v-if="createButton"
+                                color="white"
+                                @click.native="triggerCreateEvent"
+                                v-if="createButton"
                             >
                                 <span v-if="createButtonText">
                                     {{ createButtonText }}
@@ -23,97 +23,142 @@
                                     New {{ ucfirst(singleItemName) }}
                                 </span>
                             </v-btn>
-
-
+                            
+                            
                             <div class="text--white text-uppercase subtitle-1 font-weight-medium px-3">
                                 {{ totalItems }}
                                 <span v-if="totalItems === 1">Result</span>
                                 <span v-else>Results</span>
                             </div>
-
+                            
                             <v-spacer></v-spacer>
-
-                            <div :class="{'searching--closed': !searching}" class="searching">
+                            
+                            <div
+                                :class="{'searching--closed': !searching}"
+                                class="searching"
+                            >
                                 <v-text-field
-                                        :id="this.singleItemName +'-search'"
-                                        v-model="searchQuery"
-                                        append-icon="$mdiClose"
-                                        @click:append="searchEnd"
-                                        placeholder="Search"
-                                        hide-details
-                                        :autocomplete="'new-password'"
-                                        solo
+                                    :id="this.singleItemName +'-search'"
+                                    v-model="searchQuery"
+                                    append-icon="$mdiClose"
+                                    @click:append="searchEnd"
+                                    placeholder="Search"
+                                    hide-details
+                                    :autocomplete="'new-password'"
+                                    solo
                                 ></v-text-field>
                             </div>
-
-                            <v-btn
-                                    icon
-                                    dark
-                                    @click.native.stop="searchBegin"
-                                    v-if="searchButton"
-                            >
-                                <v-icon>$mdiMagnify</v-icon>
-                            </v-btn>
-
-                            <v-btn
-                                    icon
-                                    dark
-                                    @click.native.stop="clearFilters"
-                                    v-if="filterButton && filterCount > 0"
-                            >
-                                <v-icon>$mdiFilterRemoveOutline</v-icon>
-                            </v-btn>
-
-                            <v-btn
-                                    icon
-                                    dark
-                                    @click.native.stop="toggleFilterDrawer"
-                                    v-if="filterButton"
-                            >
-                                <v-badge
-                                        :value="filterCount !== 0"
-                                        color="error"
-                                        left
-                                        overlap
-                                >
-                                    <span
-                                            slot="badge"
-                                            v-if="filterCount !== 0"
+                            
+                            <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn
+                                        icon
+                                        dark
+                                        @click.native.stop="searchBegin"
+                                        v-if="searchButton"
+                                        v-on="on"
                                     >
-                                        {{ filterCount }}
-                                    </span>
-                                    <v-icon>$mdiFilterVariant</v-icon>
-                                </v-badge>
-                            </v-btn>
-
+                                        <v-icon>$mdiMagnify</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span>Search</span>
+                            </v-tooltip>
+                            
+                            <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn
+                                        v-show="sortingCount"
+                                        icon
+                                        dark
+                                        @click.native.stop="clearSorting"
+                                        v-on="on"
+                                    >
+                                        <v-icon>$mdiSortVariantRemove</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span>Clear sorting</span>
+                            </v-tooltip>
+                            
+                            <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn
+                                        icon
+                                        dark
+                                        @click.native.stop="clearFilters"
+                                        v-if="filterButton && filterCount > 0"
+                                        v-on="on"
+                                    >
+                                        <v-icon>$mdiFilterRemoveOutline</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span>Clear filters</span>
+                            </v-tooltip>
+                            
+                            <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn
+                                        icon
+                                        dark
+                                        @click.native.stop="toggleFilterDrawer"
+                                        v-if="filterButton"
+                                        v-on="on"
+                                    >
+                                        <v-badge
+                                            :value="filterCount !== 0"
+                                            color="error"
+                                            left
+                                            overlap
+                                        >
+                                            <span
+                                                slot="badge"
+                                                v-if="filterCount !== 0"
+                                            >
+                                                {{ filterCount }}
+                                            </span>
+                                            <v-icon>$mdiFilterVariant</v-icon>
+                                        </v-badge>
+                                    </v-btn>
+                                </template>
+                                <span>Filters</span>
+                            </v-tooltip>
+                            
                             <slot name="additional-buttons"></slot>
-
-                            <v-btn
-                                    icon
-                                    dark
-                                    @click.native.stop="fetchData"
-                                    v-if="refreshButton"
-                            >
-                                <v-icon>$mdiAutorenew</v-icon>
-                            </v-btn>
-
+                            
+                            <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn
+                                        icon
+                                        dark
+                                        @click.native.stop="fetchData"
+                                        v-if="refreshButton"
+                                        v-on="on"
+                                    >
+                                        <v-icon>$mdiAutorenew</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span>Refresh</span>
+                            </v-tooltip>
+                        
                         </v-card-title>
                         <v-data-table
-                                class="elevation-1"
-                                :headers="headers"
-                                :items="items"
-                                :options.sync="options"
-                                :server-items-length="totalItems"
-                                :loading="fetching"
-                                :footer-props="{
+                            class="elevation-1"
+                            :headers="headers"
+                            :items="items"
+                            :options.sync="options"
+                            :server-items-length="totalItems"
+                            :loading="fetching"
+                            :footer-props="{
                                 'items-per-page-options': $store.getters['application/getPerPage']
                             }"
-                                multi-sort
+                            multi-sort
                         >
                             <template v-slot:body="{ items }">
                                 <tbody>
                                 <template v-for="(item, index) in items">
-                                    <slot name="row" v-bind:item="item"></slot>
+                                    <slot
+                                        name="row"
+                                        v-bind:item="item"
+                                    ></slot>
                                 </template>
                                 </tbody>
                             </template>
@@ -134,7 +179,7 @@
                 items: [],
                 fetching: true,
                 timeout: null,
-
+                
                 options: {
                     groupBy: [],
                     groupDesc: [],
@@ -145,9 +190,9 @@
                     sortBy: [],
                     sortDesc: [],
                 },
-
+                
                 previousQuery: '',
-
+                
                 deleteDialog: false,
                 deleteWaiting: false,
                 deleteItem: null,
@@ -163,17 +208,17 @@
                 type: String,
                 required: true
             },
-
+            
             'data-url': {
                 type: String,
                 default: null
             },
-
+            
             'headers': {
                 type: Array,
                 default: () => ([])
             },
-
+            
             'create-button': {
                 type: Boolean,
                 default: false
@@ -182,22 +227,22 @@
                 type: String,
                 default: ''
             },
-
+            
             'search-button': {
                 type: Boolean,
                 default: true
             },
-
+            
             'refresh-button': {
                 type: Boolean,
                 default: true
             },
-
+            
             'filter-button': {
                 type: Boolean,
                 default: false
             },
-
+            
             'force-refresh': {
                 type: Boolean,
                 default: false
@@ -209,6 +254,9 @@
             },
             filterCount() {
                 return this.$store.getters['application/getSelectedFiltersCount'];
+            },
+            sortingCount() {
+                return this.options.groupBy.length || this.options.groupDesc.length || this.options.sortBy.length || this.options.sortDesc.length;
             },
             searchQuery: {
                 set(value) {
@@ -254,23 +302,23 @@
             },
             fetchData() {
                 this.fetching = true;
-
+                
                 if (this.filter.searchQuery !== this.previousQuery) {
                     this.options.page = 1;
                 }
-
+                
                 this.setPageParameter(this.options.page);
-
+                
                 this.setSortByParameter(this.options.sortBy, this.options.sortDesc);
-
+                
                 this.setItemsPerPageParameter(this.options.itemsPerPage);
-
+                
                 let url = '/' + this.pluralItemName + '/searchPaginated';
-
+                
                 if (this.dataUrl) {
                     url = this.dataUrl;
                 }
-
+                
                 window.axios.post(url + '?page=' + this.options.page, {
                     filter: this.filter,
                     itemsPerPage: this.options.itemsPerPage,
@@ -280,27 +328,27 @@
                     this.items = response.data[this.pluralItemName].data;
                     this.totalItems = response.data[this.pluralItemName].total;
                     this.fetching = false;
-
+                    
                     this.previousQuery = this.filter.searchQuery;
                 });
             },
-
+            
             checkUrlForParams() {
                 let url = new window.domurl;
-
+                
                 if (typeof url.query.page !== 'undefined') {
                     this.options.page = parseInt(url.query.page);
                 }
-
+                
                 if (typeof url.query.q !== 'undefined') {
                     this.searchQuery = url.query.q;
                     this.searching = true;
                 }
-
+                
                 if (typeof url.query.sortBy !== 'undefined') {
                     this.options.sortBy = url.query.sortBy.split('|');
                 }
-
+                
                 if (typeof url.query.sortDesc !== 'undefined') {
                     let sortDesc = url.query.sortDesc.split('|');
                     this.options.sortDesc = sortDesc.map((value) => {
@@ -311,17 +359,17 @@
                         }
                     });
                 }
-
+                
                 if (typeof url.query.itemsPerPage !== 'undefined') {
                     this.options.itemsPerPage = Number(url.query.itemsPerPage);
                 }
-
+                
                 let definitions = url.decode(url.query.toString()).split('&');
                 this.$store.dispatch('application/massToggleFilters', definitions).then(response => {
                     this.fetchData();
                 });
             },
-
+            
             setPageParameter(page) {
                 let url = new window.domurl;
                 url.query.page = page;
@@ -329,7 +377,7 @@
             },
             setSortByParameter(sortBy, sortDesc) {
                 let url = new window.domurl;
-
+                
                 if (sortBy.length) {
                     url.query.sortBy = sortBy.join('|');
                     url.query.sortDesc = sortDesc.join('|');
@@ -337,7 +385,7 @@
                     delete url.query.sortBy;
                     delete url.query.sortDesc;
                 }
-
+                
                 history.replaceState({path: url.toString()}, '', url.toString());
             },
             setItemsPerPageParameter(itemsPerPage) {
@@ -354,7 +402,7 @@
                 }
                 history.replaceState({path: url.toString()}, '', url.toString());
             },
-
+            
             searchBegin() {
                 this.searching = true;
                 setTimeout(() => document.querySelector('#' + this.singleItemName + '-search').focus(), 50)
@@ -364,14 +412,20 @@
                 this.searchQuery = '';
                 document.querySelector('#' + this.singleItemName + '-search').blur();
             },
-
+            
             toggleFilterDrawer() {
                 this.$store.commit('application/setFilterDrawerStatus', !this.$store.getters['application/getFilterDrawerStatus']);
             },
             clearFilters() {
                 this.$store.dispatch('application/resetFilters');
             },
-
+            clearSorting() {
+                this.options.groupBy = [];
+                this.options.groupDesc = [];
+                this.options.sortBy = [];
+                this.options.sortDesc = [];
+            },
+            
             triggerCreateEvent() {
                 this.$emit('create');
             },

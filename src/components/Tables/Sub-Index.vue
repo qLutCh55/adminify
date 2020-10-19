@@ -1,113 +1,164 @@
 <template>
-    <v-card
-            flat
-            class="mt-3"
-    >
-        <v-card-title
-                dark
-                class="primary white--text pa-4"
-        >
-            <v-btn
-                    color="white"
-                    @click.native="triggerCreateEvent"
-                    v-if="createButton"
-            >
-                <span v-if="createButtonText">
-                    {{ createButtonText }}
-                </span>
-                <span v-else>
-                    New {{ ucfirst(singleItemName) }}
-                </span>
-            </v-btn>
-
-            <div class="text--white text-uppercase subtitle-1 font-weight-medium px-3">
-                {{ totalItems }}
-                <span v-if="totalItems === 1">Result</span>
-                <span v-else>Results</span>
-            </div>
-
-            <v-spacer></v-spacer>
-
-            <div :class="{'searching--closed': !searching}" class="searching">
-                <v-text-field
-                        :id="this.singleItemName +'-search'"
-                        v-model="searchQuery"
-                        append-icon="$mdiClose"
-                        @click:append="searchEnd"
-                        placeholder="Search"
-                        hide-details
-                        solo
-                ></v-text-field>
-            </div>
-
-            <v-btn
-                    icon
-                    dark
-                    @click.native.stop="searchBegin"
-                    v-if="searchButton"
-            >
-                <v-icon>$mdiMagnify</v-icon>
-            </v-btn>
-
-            <v-btn
-                    icon
-                    dark
-                    @click.native.stop="clearFilters"
-                    v-if="filterButton && filterCount > 0"
-            >
-                <v-icon>$mdiFilterRemoveOutline</v-icon>
-            </v-btn>
-
-            <v-btn
-                    icon
-                    dark
-                    @click.native.stop="toggleFilterDrawer"
-                    v-if="filterButton"
-            >
-                <v-badge
-                        :value="filterCount !== 0"
-                        color="error"
-                        left
-                        overlap
-                >
-                    <span slot="badge" v-if="filterCount !== 0">{{ filterCount }}</span>
-                    <v-icon>$mdiFilterVariant</v-icon>
-                </v-badge>
-            </v-btn>
-    
-            <slot name="additional-buttons"></slot>
-
-            <v-btn
-                    icon
-                    dark
-                    @click.native.stop="fetchData"
-                    v-if="refreshButton"
-            >
-                <v-icon>$mdiAutorenew</v-icon>
-            </v-btn>
-
-        </v-card-title>
-        <v-data-table
-                :headers="headers"
-                :items="items"
-                :options.sync="options"
-                :server-items-length="totalItems"
-                :loading="fetching"
-                :footer-props="{
+	<v-card
+		flat
+		class="mt-3"
+	>
+		<v-card-title
+			dark
+			class="primary white--text pa-4"
+		>
+			<v-btn
+				color="white"
+				@click.native="triggerCreateEvent"
+				v-if="createButton"
+			>
+				<span v-if="createButtonText">
+					{{ createButtonText }}
+				</span>
+				<span v-else>
+					New {{ ucfirst(singleItemName) }}
+				</span>
+			</v-btn>
+			
+			<div class="text--white text-uppercase subtitle-1 font-weight-medium px-3">
+				{{ totalItems }}
+				<span v-if="totalItems === 1">Result</span>
+				<span v-else>Results</span>
+			</div>
+			
+			<v-spacer></v-spacer>
+			
+			<div
+				:class="{'searching--closed': !searching}"
+				class="searching"
+			>
+				<v-text-field
+					:id="this.singleItemName +'-search'"
+					v-model="searchQuery"
+					append-icon="$mdiClose"
+					@click:append="searchEnd"
+					placeholder="Search"
+					hide-details
+					solo
+				></v-text-field>
+			</div>
+			
+			<v-tooltip bottom>
+				<template v-slot:activator="{ on }">
+					<v-btn
+						icon
+						dark
+						@click.native.stop="searchBegin"
+						v-if="searchButton"
+						v-on="on"
+					>
+						<v-icon>$mdiMagnify</v-icon>
+					</v-btn>
+				</template>
+				<span>Search</span>
+			</v-tooltip>
+			
+			<v-tooltip bottom>
+				<template v-slot:activator="{ on }">
+					<v-btn
+						v-show="sortingCount"
+						icon
+						dark
+						@click.native.stop="clearSorting"
+						v-on="on"
+					>
+						<v-icon>$mdiSortVariantRemove</v-icon>
+					</v-btn>
+				</template>
+				<span>Clear sorting</span>
+			</v-tooltip>
+			
+			
+			<v-tooltip bottom>
+				<template v-slot:activator="{ on }">
+					<v-btn
+						icon
+						dark
+						@click.native.stop="clearFilters"
+						v-if="filterButton && filterCount > 0"
+						v-on="on"
+					>
+						<v-icon>$mdiFilterRemoveOutline</v-icon>
+					</v-btn>
+				</template>
+				<span>Clear filters</span>
+			</v-tooltip>
+			
+			<v-tooltip bottom>
+				<template v-slot:activator="{ on }">
+					<v-btn
+						icon
+						dark
+						@click.native.stop="toggleFilterDrawer"
+						v-if="filterButton"
+						v-on="on"
+					>
+						<v-badge
+							:value="filterCount !== 0"
+							color="error"
+							left
+							overlap
+						>
+							<span
+								slot="badge"
+								v-if="filterCount !== 0"
+							>
+								{{ filterCount }}
+							</span>
+							<v-icon>$mdiFilterVariant</v-icon>
+						</v-badge>
+					</v-btn>
+				</template>
+				<span>Filters</span>
+			</v-tooltip>
+			
+			<slot name="additional-buttons"></slot>
+			
+			<v-tooltip bottom>
+				<template v-slot:activator="{ on }">
+					<v-btn
+						icon
+						dark
+						@click.native.stop="fetchData"
+						v-if="refreshButton"
+						v-on="on"
+					>
+						<v-icon>$mdiAutorenew</v-icon>
+					</v-btn>
+				</template>
+				<span>Refresh</span>
+			</v-tooltip>
+		
+		</v-card-title>
+		<v-data-table
+			:headers="headers"
+			:items="items"
+			:options.sync="options"
+			:server-items-length="totalItems"
+			:loading="fetching"
+			:footer-props="{
                     'items-per-page-options': $store.getters['application/getPerPage']
                 }"
-                multi-sort
-        >
-            <template v-slot:body="{ items }">
-                <tbody>
-                <template v-for="(item, index) in items">
-                    <slot name="row" v-bind:item="item"></slot>
-                </template>
-                </tbody>
-            </template>
-        </v-data-table>
-        <slot></slot>
-    </v-card>
+			multi-sort
+		>
+			<template v-slot:body="{ items }">
+				<tbody>
+				<template v-for="(item, index) in items">
+					<slot
+						name="row"
+						v-bind:item="item"
+					></slot>
+				</template>
+				</tbody>
+			</template>
+		</v-data-table>
+		<slot></slot>
+	</v-card>
 </template>
 <script>
     export default {
@@ -196,6 +247,9 @@
             },
             filterCount() {
                 return this.$store.getters['application/getSelectedFiltersCount'];
+            },
+            sortingCount() {
+                return this.options.groupBy.length || this.options.groupDesc.length || this.options.sortBy.length || this.options.sortDesc.length;
             },
             searchQuery: {
                 set(value) {
@@ -358,6 +412,12 @@
             },
             clearFilters() {
                 this.$store.dispatch('application/resetFilters');
+            },
+            clearSorting() {
+                this.options.groupBy = [];
+                this.options.groupDesc = [];
+                this.options.sortBy = [];
+                this.options.sortDesc = [];
             },
 
             triggerCreateEvent() {
