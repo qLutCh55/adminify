@@ -299,19 +299,22 @@
                     id: this.thumbnailImage.id,
                     model: this.model,
                     modelId: this.modelId,
-                }).then(response => {
-                    this.thumbnailImage = {
-                        model: this.model,
-                        modelId: this.modelId
-                    }
-                    this.deleteWaiting = false;
-                    this.deleteDialog = false;
-                    this.$toasted.show("Thumbnail removed", {
-                        theme: "default",
-                        position: "top-center",
-                        duration: 1500
+                })
+                    .then(response => {
+                        this.thumbnailImage = {
+                            model: this.model,
+                            modelId: this.modelId
+                        }
+                        this.deleteWaiting = false;
+                        this.deleteDialog = false;
+                        this.$toasted.show("Thumbnail removed", {
+                            theme: "default",
+                            position: "top-center",
+                            duration: 1500
+                        });
+
+                        this.$emit('changed');
                     });
-                });
             },
         },
     }
