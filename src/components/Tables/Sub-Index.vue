@@ -80,7 +80,7 @@
 						icon
 						dark
 						@click.native.stop="clearFilters"
-						v-if="filterButton && filterCount > 0"
+						v-show="filterButton && filterCount > 0"
 						v-on="on"
 					>
 						<v-icon>$mdiFilterRemoveOutline</v-icon>
