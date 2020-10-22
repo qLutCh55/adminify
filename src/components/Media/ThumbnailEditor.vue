@@ -1,84 +1,87 @@
 <template>
-    <div class="text-center mb-3 v-thumbnail">
-        <div class="v-thumbnail-avatar">
-            <img
-                :src="imageSrc"
-                @click="changeThumbnail"
-                class="img-fluid"
-                :class="changeable? 'pointer' : ''"
-                v-if="!uploading"
-            >
-            <v-progress-circular
-                v-else
-                :rotate="270"
-                :size="150"
-                :width="10"
-                :value="uploadingProgress"
-                color="primary"
-            >
-                {{ uploadingProgress }} %
-            </v-progress-circular>
-        </div>
-        <div class="v-thumbnail-actions" v-if="changeable">
-            <v-tooltip bottom>
-                <template v-slot:activator="{ on }">
-                    <v-btn
-                        v-on="on"
-                        fab
-                        small
-                        color="primary"
-                        @click="changeThumbnail"
-                        :disabled="disabled"
-                    >
-                        <v-icon>$mdiPencil</v-icon>
-                    </v-btn>
-                </template>
-                <span>Change</span>
-            </v-tooltip>
-
-            <v-tooltip bottom>
-                <template v-slot:activator="{ on }">
-                    <v-btn
-                        v-on="on"
-                        fab
-                        small
-                        color="error"
-                        @click="deleteDialog = true"
-                        v-show="deleteable"
-                        :disabled="disabled"
-                    >
-                        <v-icon>$mdiDelete</v-icon>
-                    </v-btn>
-                </template>
-                <span>Delete</span>
-            </v-tooltip>
-        </div>
-        <input
-            v-if="changeable"
-            hidden
-            type="file"
-            ref="imageInput"
-            class="hidden"
-            :accept="accept"
-            :disabled="disabled"
-            @change="onFileChange"
-        >
-        <v-img-editor
-            v-if="showEditor && changeable"
-            :image="image"
-            :ratios="['1:1']"
-            :viewMode="1"
-            @close="resetEditor"
-            @save="upload"
-        ></v-img-editor>
-        <v-confirm
-            v-if="changeable"
-            :dialog.sync="deleteDialog"
-            :waiting.sync="deleteWaiting"
-            @cancel="deleteDialog = false"
-            @confirm="doDelete"
-        ></v-confirm>
-    </div>
+	<div class="text-center mb-3 v-thumbnail">
+		<div class="v-thumbnail-avatar">
+			<img
+				:src="imageSrc"
+				@click="changeThumbnail"
+				class="img-fluid"
+				:class="changeable? 'pointer' : ''"
+				v-if="!uploading"
+			>
+			<v-progress-circular
+				v-else
+				:rotate="270"
+				:size="150"
+				:width="10"
+				:value="uploadingProgress"
+				color="primary"
+			>
+				{{ uploadingProgress }} %
+			</v-progress-circular>
+		</div>
+		<div
+			class="v-thumbnail-actions"
+			v-if="changeable"
+		>
+			<v-tooltip bottom>
+				<template v-slot:activator="{ on }">
+					<v-btn
+						v-on="on"
+						fab
+						small
+						color="primary"
+						@click="changeThumbnail"
+						:disabled="disabled"
+					>
+						<v-icon>$mdiPencil</v-icon>
+					</v-btn>
+				</template>
+				<span>Change</span>
+			</v-tooltip>
+			
+			<v-tooltip bottom>
+				<template v-slot:activator="{ on }">
+					<v-btn
+						v-on="on"
+						fab
+						small
+						color="error"
+						@click="deleteDialog = true"
+						v-show="deleteable"
+						:disabled="disabled"
+					>
+						<v-icon>$mdiDelete</v-icon>
+					</v-btn>
+				</template>
+				<span>Delete</span>
+			</v-tooltip>
+		</div>
+		<input
+			v-if="changeable"
+			hidden
+			type="file"
+			ref="imageInput"
+			class="hidden"
+			:accept="accept"
+			:disabled="disabled"
+			@change="onFileChange"
+		>
+		<v-img-editor
+			v-if="showEditor && changeable"
+			:image="image"
+			:ratios="['1:1']"
+			:viewMode="1"
+			@close="resetEditor"
+			@save="upload"
+		></v-img-editor>
+		<v-confirm
+			v-if="changeable"
+			:dialog.sync="deleteDialog"
+			:waiting.sync="deleteWaiting"
+			@cancel="deleteDialog = false"
+			@confirm="doDelete"
+		></v-confirm>
+	</div>
 </template>
 <script>
     export default {
@@ -234,29 +237,33 @@
                     onUploadProgress: (progressEvent) => {
                         this.uploadingProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
                     }
-                }).then(response => {
-                    this.thumbnailImage = response.data.image;
-                    this.thumbnailImage.canDelete = true;
-                    this.uploading = false;
-                    this.uploadingProgress = 0;
-                    this.$toasted.show("Image uploaded", {
-                        theme: "default",
-                        position: "top-center",
-                        duration: 1500
-                    });
-                }).catch(error => {
-                    let message = "Whoops! Something went wrong";
+                })
+                    .then(response => {
+                        this.thumbnailImage = response.data.image;
+                        this.thumbnailImage.canDelete = true;
+                        this.uploading = false;
+                        this.uploadingProgress = 0;
+                        this.$toasted.show("Image uploaded", {
+                            theme: "default",
+                            position: "top-center",
+                            duration: 1500
+                        });
 
-                    if (error.response.status === 413) {
-                        message = "Whoops! Image size is too large";
-                    }
+                        this.$emit('changed');
+                    })
+                    .catch(error => {
+                        let message = "Whoops! Something went wrong";
 
-                    this.$toasted.show(message, {
-                        theme: "error",
-                        position: "top-center",
-                        duration: 3500
+                        if (error.response.status === 413) {
+                            message = "Whoops! Image size is too large";
+                        }
+
+                        this.$toasted.show(message, {
+                            theme: "error",
+                            position: "top-center",
+                            duration: 3500
+                        });
                     });
-                });
             },
             verifyFileType(file) {
                 if (this.accept && this.accept !== '*') {
