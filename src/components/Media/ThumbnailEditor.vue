@@ -126,6 +126,10 @@
                 type: String,
                 required: true,
             },
+            'role': {
+                type: String,
+                default: 'thumbnail',
+            },
             'details': {
                 type: Object,
             },
@@ -224,9 +228,9 @@
                 let data = new FormData();
                 data.append('modelId', this.modelId);
                 data.append('model', this.model);
-                data.append('role', 'thumbnail');
+                data.append('role', this.role);
                 Object.keys(this.fileDetails).forEach(key => data.append(key, this.fileDetails[key]));
-                data.append('thumbnail', image, image.name);
+                data.append(this.role, image, image.name);
                 data.append('single', true);
 
                 window.axios.post('/images/upload', data, {
