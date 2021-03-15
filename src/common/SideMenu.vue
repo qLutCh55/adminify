@@ -83,7 +83,7 @@
                             >
                                 <template v-slot:activator="{ on }">
                                     <v-list-item
-                                        :to="menuChild.path"
+                                        @click="menuItemClick(menuChild)"
                                         exact
                                         v-on="on"
                                     >
@@ -244,6 +244,21 @@
                     .then((response) => {
                         this.icon = response.data.icon;
                     });
+            },
+    
+            menuItemClick(item) {
+                if (typeof item.target !== 'undefined') {
+            
+                    if (typeof item.newTab !== 'undefined' && item.newTab) {
+                        window.open(item.target, '_blank');
+                    } else {
+                        window.open(item.target);
+                    }
+                }
+        
+                this.$router.push(item.path);
+        
+                this.key = !this.key;
             }
         }
     }
