@@ -221,18 +221,22 @@
                     this.openPanel = name;
                 }
             },
-
+    
             mustOpen(item) {
                 for (let i = 0, len = item.children.length; i < len; i++) {
                     let child = item.children[i];
-
-                    let childUrl = child.path;
-
+            
+                    let childUrl = '#';
+            
+                    if (typeof child.path !== 'undefined') {
+                        childUrl = child.path;
+                    }
+            
                     if (childUrl.indexOf('?') !== -1) {
                         childUrl = child.path.substring(0, child.path.indexOf("?"));
                     }
-
-                    if (window.location.href.indexOf(childUrl) > -1) {
+            
+                    if (window.location.pathname === childUrl) {
                         return true;
                     }
                 }
