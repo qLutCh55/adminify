@@ -134,10 +134,12 @@
                                     });
                                 }
 
-                                let childPath = child.path.split('?')[0];
+				if (typeof child.path !== 'undefined') {
+                            	    let childPath = child.path.split('?')[0];
 
-                                if (childRestrictions.length) {
-                                    this.permissions[childPath] = childRestrictions;
+                            	    if (childRestrictions.length) {
+                                	this.permissions[childPath] = childRestrictions;
+                            	    }
                                 }
                             });
 
