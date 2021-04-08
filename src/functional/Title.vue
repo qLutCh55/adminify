@@ -13,9 +13,12 @@
         methods: {
             setTitle() {
                 if (typeof this.$route.name === 'string') {
+                    this.pageTitle = this.$route.name;
+
                     if (this.originalTitle.indexOf('|') === -1) {
-                        this.pageTitle = this.$route.name;
-                        document.title = this.originalTitle + ' | ' + this.pageTitle;
+                        document.title = `${this.originalTitle} | ${this.pageTitle}`;
+                    } else {
+                        document.title = `${this.$store.getters['application/getApplicationName']} | ${this.pageTitle}`;
                     }
                 } else {
                     this.pageTitle = null;
