@@ -30,7 +30,16 @@
                     :key="component + index"
             >
                 <v-list-item slot="activator">
-                    <v-list-item-title>{{ getFilterTypeLabel(filter.type) }}</v-list-item-title>
+                    <v-list-item-title
+                        v-if="typeof filter.label !== 'undefined'"
+                    >
+                        {{ filter.label }}
+                    </v-list-item-title>
+                    <v-list-item-title
+                        v-else
+                    >
+                        {{ getFilterTypeLabel(filter.type) }}
+                    </v-list-item-title>
                 </v-list-item>
 
                 <template v-for="item in filter.data">
