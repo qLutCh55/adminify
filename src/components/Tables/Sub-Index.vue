@@ -22,8 +22,8 @@
 			
 			<div class="text--white text-uppercase subtitle-1 font-weight-medium px-3">
 				{{ totalItems }}
-				<span v-if="totalItems === 1">Result</span>
-				<span v-else>Results</span>
+				<span v-if="totalItems === 1">{{ useItemNameForResults ? ucfirst(singleItemName) : "Result" }}</span>
+				<span v-else>{{ useItemNameForResults ? ucfirst(pluralItemName) : "Results" }}</span>
 			</div>
 			
 			<v-spacer></v-spacer>
@@ -197,6 +197,11 @@
             'plural-item-name': {
                 type: String,
                 required: true
+            },
+
+            'use-item-name-for-results': {
+                type: Boolean,
+                default: false
             },
 
             'data-id-parameter': {
