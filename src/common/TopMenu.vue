@@ -180,7 +180,7 @@
         },
         created() {
             this.$store.dispatch('application/getNotificationsCount');
-            this.setupNotificationWebsocket();
+            // this.setupNotificationWebsocket();
         },
         beforeDestroy() {
             if (this.timer) {
