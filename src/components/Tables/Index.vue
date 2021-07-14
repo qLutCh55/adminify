@@ -332,6 +332,11 @@
                 }).then(response => {
                     this.items = response.data[this.pluralItemName].data;
                     this.totalItems = response.data[this.pluralItemName].total;
+
+                    if (this.totalItems < this.options.itemsPerPage && this.options.page !== 1) {
+                      this.options.page = 1;
+                    }
+
                     this.fetching = false;
                     
                     this.previousQuery = this.filter.searchQuery;
