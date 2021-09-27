@@ -24,6 +24,8 @@
                             v-model="invalid"
                             lazy-validation
                             @keyup.enter.native="confirmDialog"
+                            autocomplete="off"
+                            autofill="off"
                     >
                         <slot name="content"></slot>
                     </v-form>
