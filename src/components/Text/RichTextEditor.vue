@@ -164,6 +164,10 @@ export default {
       type: Object,
       default: () => ({})
     },
+    'extensions': {
+      type: Array,
+      default: () => ([])
+    },
   },
 
   data() {
@@ -195,6 +199,10 @@ export default {
       },
       ...this.configuration
     };
+
+    this.extensions.forEach((e) => {
+      configuration.extensions.push(e);
+    });
 
     this.editor = new Editor(configuration);
   },
