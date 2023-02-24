@@ -122,6 +122,7 @@ import {
   Link,
   Strike,
   Underline,
+  HardBreak,
 } from 'tiptap-extensions'
 
 export default {
@@ -187,6 +188,7 @@ export default {
         new Italic(),
         new Strike(),
         new Underline(),
+        new HardBreak(),
       ],
       onUpdate: ({getHTML}) => {
         this.$emit('input', getHTML());
