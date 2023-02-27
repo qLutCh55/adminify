@@ -15,6 +15,7 @@
                                 color="white"
                                 @click.native="triggerCreateEvent"
                                 v-if="createButton"
+                                :disabled="createButtonDisabled"
                             >
                                 <span v-if="createButtonText">
                                     {{ createButtonText }}
@@ -231,6 +232,10 @@
             'create-button-text': {
                 type: String,
                 default: ''
+            },
+            'create-button-disabled': {
+              type: Boolean,
+              default: false,
             },
             
             'search-button': {
